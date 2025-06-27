@@ -12,7 +12,7 @@ export default function RareRate({rarerate}: RareRateProps) {
                 </p>
                 <div className="flex flex-row items-center justify-start gap-2">
                     {Array.from({ length: 5 }, (_, index) => (
-                        <img key={index} src={index < rarerate ? "Polygon.svg" : "polygonLight.svg"} alt="Polygon" />
+                        <img key={index} src={index < rarerate ? "Polygon.svg" : "PolygonLight.svg"} alt="Polygon" />
                     ))}
                 </div>
             </div>
