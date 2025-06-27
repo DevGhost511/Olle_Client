@@ -11,7 +11,7 @@ export default function Snap() {
   return (
     <div className="flex flex-col sm:max-w-6xl w-screen h-screen py-4 sm:py-12 px-6 sm:px-12  mx-auto">
       <Menu />
-        <div className="flex flex-col items-center justify-start gap-4 w-full sm:px-15">
+        <div className="flex flex-col items-center justify-start gap-4 w-full sm:px-15 py-6">
           <img src="Logo/mini_logo.svg" alt="mini logo" />
           <p className="font-Geist text-(--brand-6) font-medium text-xl text-center">
             Is this "Rolex Submariner Date 126610LN", right?
