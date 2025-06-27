@@ -1,5 +1,6 @@
 'use client'
-import Menu from "@/components/menu";
+
+import Menu from "@/components/Menu";
 import Snap from "@/components/Snap";
 import { useState } from "react";
 
@@ -14,7 +15,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col sm:max-w-6xl w-screen h-screen py-4 sm:py-12 px-6 sm:px-12  mx-auto">
-      <Menu/>
+      <Menu />
       <div className="flex-1 flex flex-col items-around justify-between sm:justify-center sm:gap-40 w-full h-full lg:px-60 md:px-20 sm:px-6 pt-16 sm:pt-0">
         <div className="flex flex-col items-center justify-start gap-4">
           <img src="Logo/Logo.svg" alt="Logo" />

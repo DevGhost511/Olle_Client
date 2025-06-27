@@ -1,7 +1,7 @@
 'use client'
 
 import ChattingInput from "@/components/ChattingInput"
-import Menu from "@/components/menu"
+import Menu from "@/components/Menu"
 import RareRate from "@/components/RareRate"
 import SecButton from "@/components/SecButton"
 import Valuation from "@/components/Valuation"
@@ -18,7 +18,7 @@ export default function Snap() {
           </p>
         </div>
 
-        <div className="flex flex-1 flex-col w-full   items-center justify-start gap-3 overflow-auto w-full sm:px-15 ">
+        <div className="flex flex-1 flex-col   items-center justify-start gap-3 overflow-auto w-full sm:px-15 ">
 
           <img src="Assets/car.jpg" alt="Snap Image" className=" w-full sm:w-full sm:h-100 h-80 object-cover border-1 border-(--brand-3)" />
           <div className="flex flex-row items-center justify-around gap-2 sm:gap-3 w-full">
