@@ -4,8 +4,14 @@ import EmailInput from "@/components/EmailInput"
 import PasswordInput from "@/components/PasswordInput"
 import PriButton from "@/components/PriButton"
 import SecButton from "@/components/SecButton"
+import { useRouter } from "next/navigation"
 
 export default function Login() {
+
+    const router = useRouter()
+    const handleSignupClick = () => {
+        router.push("/signup")
+    }
     return (
         <>
             <div className="flex flex-col items-center justify-start  w-full h-screen py-30">
@@ -29,7 +35,7 @@ export default function Login() {
                         If you don’t have an account
                     </p>
                     <div className="w-full">
-                        <SecButton text="Sign Up" />
+                        <SecButton text="Sign Up" onClick={handleSignupClick} />
                     </div>
 
                 </div>
