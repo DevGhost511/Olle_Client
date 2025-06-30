@@ -24,6 +24,7 @@
   --brand-2: #EFECE0;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-abril-fatface: var(--font-abril-fatface);
 }
 
 @media (prefers-color-scheme: dark) {

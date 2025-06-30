@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Abril_Fatface } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import localFont from 'next/font/local'
+
 
 
 const geistSans = Geist({
@@ -13,10 +15,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const abrilFatface = Abril_Fatface({
+const abrilFatface = localFont({
+  src: [
+    {
+      path: "../../public/Font/Abril_Fatface/AbrilFatface-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
   variable: "--font-abril-fatface",
-  subsets: ["latin"],
-  weight: "400",
 });
 
 export const metadata: Metadata = {
