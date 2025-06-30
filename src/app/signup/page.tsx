@@ -1,11 +1,18 @@
 'use client'
 
+import { useState } from "react"
 import EmailInput from "@/components/EmailInput"
 import PasswordInput from "@/components/PasswordInput"
 import PriButton from "@/components/PriButton"
 import SecButton from "@/components/SecButton"
 
 export default function Login() {
+
+    const [isChecked, setIsChecked] = useState(false);
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked);
+    };
+
     return (
         <>
             <div className="flex flex-col items-center justify-start  w-full h-screen py-30">
@@ -17,19 +24,30 @@ export default function Login() {
                         </p>
                     </div>
                     <p className="text-2xl text-(--black-5) font-abril-fatface ">
-                        Login to Your Account
+                        Create An Account
                     </p>
                     <div className="w-full flex flex-col gap-4">
                         <EmailInput />
                         <PasswordInput />
+
                     </div>
-                    <PriButton text="Login" />
+                    <div className="flex flex-row gap-2 items-center justify-start w-full">
+                        {isChecked ? <img onClick={handleCheckboxChange} src="checked.svg" alt="" /> :
+                            <img onClick={handleCheckboxChange} src="uncheck.svg" alt="" />}
+                        {isChecked ? <p className="text-lg text-(--black-5) font-medium">
+                            Agree with Terms of Service and Privacy Policy
+                        </p>
+                            : <p className="text-lg text-(--black-4) font-medium">
+                                Agree with Terms of Service and Privacy Policy
+                            </p>}
+                    </div>
+                                            <PriButton text="Create an Account"/>
 
                     <p className="flex w-full text-left text-(--black-5) text-xl">
-                        If you don’t have an account
+                        If you already have an account
                     </p>
                     <div className="w-full">
-                        <SecButton text="Sign Up" />
+                        <SecButton text="Login" />
                     </div>
 
                 </div>
