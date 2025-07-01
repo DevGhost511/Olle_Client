@@ -27,10 +27,12 @@ export default function Menu() {
             onClick={() => {toggleMenu()}}>
               Dashboard
             </button>
-            <button className="cursor-pointer text-(--black-5) font-Geist font-medium text-2xl sm:text-left text-center w-full border-0 px-4 py-2 hover:bg-[#EFECE0]">
+            <button className="cursor-pointer text-(--black-5) font-Geist font-medium text-2xl sm:text-left text-center w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+            onClick={() => {toggleMenu()}}>
               Message Inbox
             </button>
-            <button className="cursor-pointer text-(--black-5) font-Geist font-medium text-2xl sm:text-left text-center w-full border-0 px-4 py-2 hover:bg-[#EFECE0]">
+            <button className="cursor-pointer text-(--black-5) font-Geist font-medium text-2xl sm:text-left text-center w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+            onClick={() => {toggleMenu()}}>
               Help
             </button>
             
