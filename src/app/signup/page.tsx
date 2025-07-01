@@ -10,7 +10,7 @@ import SecButton from "@/components/SecButton"
 export default function Login() {
 
     const [isChecked, setIsChecked] = useState(false);
-    const handleCheckboxChange  = () => {
+    const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
     };
 
@@ -37,18 +37,23 @@ export default function Login() {
                         <PasswordInput />
 
                     </div>
-                    <div className="flex flex-row gap-4 items-center justify-start w-full">
-                        {isChecked ? <img onClick={handleCheckboxChange} src="checked.svg" alt="" /> :
-                            <img onClick={handleCheckboxChange} src="uncheck.svg" alt="" />}
-                        {isChecked ? <p className="text-lg text-(--black-5) font-medium">
-                            Agree with Terms of Service and Privacy Policy
-                        </p>
-                            : <p className="text-lg text-(--black-4) font-medium">
-                                Agree with Terms of Service and Privacy Policy
-                            </p>}
-                    </div>
-                    <PriButton text="Create an Account" disabled={!isChecked} />
 
+                    <div className="flex flex-col justify-between items-center gap-4 w-full">
+                        <div className="flex flex-row gap-4 items-center justify-start w-full">
+                            {isChecked ? <img onClick={handleCheckboxChange} src="checked.svg" alt="" /> :
+                                <img onClick={handleCheckboxChange} src="uncheck.svg" alt="" />}
+                            {isChecked ? <p className="text-lg text-(--black-5) font-medium">
+                                Agree with Terms of Service and Privacy Policy
+                            </p>
+                                : <p className="text-lg text-(--black-4) font-medium">
+                                    Agree with Terms of Service and Privacy Policy
+                                </p>}
+                        </div>
+                        <PriButton text="Create an Account" disabled={!isChecked} />
+                        <p className="flex flex-row w-full justify-center items-center text-xl text-(--black-4)"> Or </p>
+                        {isChecked ? <SecButton text="Sign Up with Google" icon="google_brand.svg" disabled={!isChecked} />
+                        :<SecButton text="Sign Up with Google" icon="google_disabled.svg" disabled={!isChecked} />}
+                    </div>
                     <p className="flex w-full text-left text-(--black-5) text-xl">
                         If you already have an account
                     </p>

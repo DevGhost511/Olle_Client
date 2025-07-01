@@ -29,8 +29,11 @@ export default function Login() {
                         <EmailInput />
                         <PasswordInput />
                     </div>
+                    <div className="flex flex-col w-full items-center justify-center gap-4">
                     <PriButton text="Login" />
-
+                    <p className="flex flex-row w-full text-xl text-center justify-center text-(--black-4)"> Or </p>
+                    <SecButton text="Login with Google" icon="google_brand.svg"/>
+                    </div>
                     <p className="flex w-full text-left text-(--black-5) text-xl">
                         If you don’t have an account
                     </p>
