@@ -1,0 +1,57 @@
+'use client'
+import Menu from "@/components/Menu";
+import CollectionCard from "@/components/CollectionCard";
+import Tab from "@/components/Tab";
+import { useState } from "react";
+
+const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
+
+export default function Dashboard() {
+
+    const [activeTab, setActiveTab] = useState(tabNames[0]);
+    const handleTabChange = (tab: string) => {
+        setActiveTab(tab);
+    };
+
+    return (
+        <div className="flex flex-col sm:max-w-6xl w-screen h-screen py-4 sm:py-12 px-6 sm:px-12  mx-auto">
+            <div className="flex flex-row justify-between items-center ">
+                <Menu collapse={false}/>
+            </div>
+
+            <div className="flex flex-col justify-center items-center py-4 sm:py-10 gap-3">
+                <p className="text-xl text-(--black-5) font-abril-fatface ">My Collections</p>
+                <div className="flex flex-col justify-center items-center gap-1">
+                    <p className="text-md text-(--black-5) font-normal">
+                        Total Estimated Value
+                    </p>
+                    <p className="text-2xl text-(--black-5) font-bold">
+                        $12,500
+                    </p>
+                    <p className="text-sm text-(--black-4) font-normal">
+                        +$9,999 Last 1 month
+                    </p>
+                </div>
+            </div>
+            <Tab onChange={handleTabChange} tabNames={tabNames} className="my-4 sm:my-8"/>
+            <div className="flex flex-1 flex-col w-full justify-start overflow-auto gap-6">
+                
+                {activeTab === "Cars (3)" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
+                    <CollectionCard name="1967 Ferrari 275 GTB/4" price={1256400} image="Assets/car.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
+                    <CollectionCard name="1967  GTB/4" price={1122500} image="Assets/car1.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
+                    <CollectionCard name="1967 Ferrari 275 " price={12432500} image="Assets/car2.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
+                </div>)}
+                {activeTab === "Watches (3)" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
+                    <CollectionCard name="1967 Ferrari 275 GTB/4" price={1256400} image="Assets/watch1.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
+                    <CollectionCard name="1967  GTB/4" price={1122500} image="Assets/watch2.jpg" className="w-full sm:w-[45%] md:w-[32%]"/>
+                    <CollectionCard name="1967 Ferrari 275 " price={12432500} image="Assets/watch3.jpg" className="w-full sm:w-[45%] md:w-[32%]"/>
+                </div>)}
+                {activeTab === "Arts (2)" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
+                    <CollectionCard name="1967 Ferrari 275 GTB/4" price={1256400} image="Assets/arts1.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
+                    <CollectionCard name="1967  GTB/4" price={1122500} image="Assets/arts2.jpg" className="w-full sm:w-[45%] md:w-[32%]"/>
+                </div>)}
+            </div>
+
+        </div>
+    )
+}
