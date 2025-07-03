@@ -14,7 +14,7 @@ type MessageCardProps = {
 export default function MessageCard ({image, title, messageContent, isRead, category, time}: MessageCardProps) {
 
     return (
-        <div className={`flex flex-row justify-start items-start gap-4 w-full border-1 border-(--brand-3) rounded-xl p-2 ${isRead ? 'bg-inherit' : 'bg-white'}`}>
+        <div className={`cursor-pointer flex flex-row justify-start items-start gap-4 w-full border-1 border-(--brand-3) rounded-xl p-2 hover:bg-white ${isRead ? 'bg-inherit' : 'bg-white'}`}>
             <div className="border-1 border-(--brand-3) rounded-xl w-32 h-32 sm:w-32 sm:h-32">
                <img src={image} alt="snap" className="w-full h-full object-cover rounded-xl" />
             </div>
