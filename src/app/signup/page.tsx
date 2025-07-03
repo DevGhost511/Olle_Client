@@ -21,8 +21,8 @@ export default function Login() {
 
     return (
         <>
-            <div className="flex flex-col items-center justify-start  w-full h-screen py-20 sm:py-30">
-                <div className="flex flex-col sm:w-2xl w-full px-6 items-center justify-center gap-6">
+            <div className="flex flex-col items-center justify-start  w-full h-screen py-10 sm:py-30">
+                <div className="flex flex-col sm:w-2xl w-full px-4 items-center justify-center gap-6">
                     <div className="flex flex-col justify-start items-center gap-4">
                         <img src="Logo/mini_logo.svg" alt="logo" />
                         <p className="font-Geist text-(--brand-6) font-medium text-lg  text-center">

@@ -9,9 +9,11 @@ import Valuation from "@/components/Valuation"
 export default function Snap() {
 
   return (
-    <div className="flex flex-col sm:max-w-6xl w-screen h-screen py-4 sm:py-12 px-6 sm:px-12  mx-auto">
+    <div className="flex flex-col sm:max-w-6xl w-screen h-screen pt-4 sm:py-12 sm:px-12  mx-auto">
+      <div className="w-full px-4 sm:px-0">
       <Menu collapse={true}/>
-      <div className="flex flex-col items-center justify-start gap-4 w-full sm:px-15 py-6">
+      </div>
+      <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
         <img src="Logo/mini_logo.svg" alt="mini logo" />
         <div className="flex flex-wrap justify-center items-center gap-2">
         <p className="font-Geist text-(--black-5) font-medium text-md text-center">
@@ -27,9 +29,9 @@ export default function Snap() {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col   items-center justify-start gap-3 overflow-auto w-full sm:px-15 ">
+      <div className="flex flex-1 flex-col rounded-2xl  items-center justify-start gap-3 overflow-auto w-full px-4 sm:px-15 ">
 
-        <img src="Assets/car.jpg" alt="Snap Image" className=" w-full sm:w-full sm:h-100 h-80 object-cover border-1 border-(--brand-3)" />
+        <img src="Assets/car2.jpg" alt="Snap Image" className="rounded-xl w-full sm:w-full sm:h-100 h-80 object-cover border-1 border-(--brand-3)" />
         <div className="flex flex-row items-center justify-around gap-2 sm:gap-3 w-full">
           <SecButton text="Add to Collection" />
           <SecButton text="Add to Wishlist" />
@@ -46,7 +48,7 @@ export default function Snap() {
         </div>
 
       </div>
-      <div className="flex w-full sm:px-15">
+        <div className="w-full px-4 sm:px-15 pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
         <ChattingInput />
       </div>
     </div>

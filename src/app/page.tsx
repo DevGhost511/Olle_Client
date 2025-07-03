@@ -14,8 +14,11 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col sm:max-w-6xl w-screen h-screen py-4 sm:py-12 px-6 sm:px-12  mx-auto">
+    <div className="flex flex-col sm:max-w-6xl w-screen h-screen  sm:py-12  sm:px-12  mx-auto">
+      <div className="w-full px-4 py-4">
       <Menu collapse={true} />
+
+      </div>
       <div className="flex-1 flex flex-col items-around justify-between sm:justify-center sm:gap-40 w-full h-full lg:px-60 md:px-20 sm:px-6 pt-16 sm:pt-0">
         <div className="flex flex-col items-center justify-start gap-4">
           <img src="Logo/Logo.svg" alt="Logo" />
@@ -23,7 +26,10 @@ export default function Home() {
             Hi, I am Olle <br/>- Your Collectible Expert.
           </p>
         </div>
+        <div className="w-full px-4 pt-4 pb-6 sm:p-0 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
         <Snap />
+
+        </div>
       </div>
 
     </div>
