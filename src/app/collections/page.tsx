@@ -20,7 +20,7 @@ export default function Dashboard() {
                 <Menu collapse={false} />
             </div>
 
-            <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-10 gap-3">
+            <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
                 <p className="text-xl text-(--black-5) font-abril-fatface ">My Collections</p>
                 <div className="flex flex-col justify-center items-center gap-1">
                     <p className="text-md text-(--black-5) font-normal">
@@ -35,7 +35,7 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="flex flex-col justify-start items-start w-full px-4 sm:px-0">
-            <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-8" />
+            <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" />
             </div>
             <div className="flex flex-1 flex-col w-full justify-start overflow-auto gap-6 px-4 sm:px-0">
 
