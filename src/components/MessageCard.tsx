@@ -20,7 +20,7 @@ export default function MessageCard ({image, title, messageContent, isRead, cate
             </div>
             <div className="flex-1 flex flex-col justify-start items-start gap-3 overflow-hidden max-h-32 h-full sm:max-h-40">
                 <div className="flex-1 flex flex-col justify-start items-start gap-1 w-full">
-                {!isRead && (<div className="w-fit px-2 py-1 rounded-full bg-(--brand-6) text-md font-medium text-white">
+                {!isRead && (<div className="w-fit px-2 py-1 rounded-full bg-(--brand-6) text-sm font-medium text-white">
                     New Message
                 </div>)}
                 <p className={`w-full text-left font-Geist text-lg text-(--black-5) text-nowrap ${isRead ? 'font-normal' : 'font-semibold'}`}>
