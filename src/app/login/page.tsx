@@ -6,7 +6,7 @@ import PriButton from "@/components/PriButton"
 import SecButton from "@/components/SecButton"
 import { useRouter } from "next/navigation"
 
-export default function Login() {
+export default function Page() {
 
     const router = useRouter()
     const handleSignupClick = () => {

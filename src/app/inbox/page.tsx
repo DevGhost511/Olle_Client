@@ -8,7 +8,7 @@ import Snap from "@/components/Snap"
 
 const tabNames = ["All", "Inquiries", "Matches"]
 
-const Message = [
+export const Message = [
     {
         title: "We Found Philippe Naurilus 5711/1A !",
         messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
@@ -58,7 +58,7 @@ const Message = [
     },
 ]
 
-export default function Inbox() {
+export default function Page () {
 
     const [activeTab, setActiveTab] = useState(tabNames[0]);
     const handleTabChange = (tab: string) => {
