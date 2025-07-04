@@ -1,6 +1,4 @@
 'use client'
-import { time } from "console";
-import { useState } from "react";
 
 type MessageCardProps = {
     image: string;
