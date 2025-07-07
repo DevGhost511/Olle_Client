@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col sm:max-w-6xl w-screen h-screen  sm:py-12  sm:px-12  mx-auto">
-      <div className="w-full px-4 py-4">
+      <div className="w-full px-4 pb-4 pt-2">
       <Menu collapse={true} />
 
       </div>

@@ -64,6 +64,7 @@ export default function Page () {
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
     };
+    
 
     return (
         <div className="flex flex-col sm:max-w-6xl w-screen h-screen pt-2 sm:py-12 sm:px-12 mx-auto">
