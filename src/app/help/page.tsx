@@ -1,3 +1,5 @@
+'use client'
+
 import Menu from "@/components/Menu"
 import HelpCard from "@/components/HelpCard";
 import Snap from "@/components/Snap";
