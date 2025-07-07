@@ -8,7 +8,7 @@ import Snap from "@/components/Snap"
 
 const tabNames = ["All", "Inquiries", "Matches"]
 
-export const Message = [
+const Message = [
     {
         title: "We Found Philippe Naurilus 5711/1A !",
         messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",

@@ -4,7 +4,7 @@ import Menu from "@/components/Menu"
 import HelpCard from "@/components/HelpCard";
 import Snap from "@/components/Snap";
 
-export const FAQ = [
+const FAQ = [
     {
         question: "Track a Collectible ",
         answer: "Add an item to securely track its details and value.",
