@@ -15,11 +15,15 @@ export default function Menu({ collapse }: MenuProps) {
   };
 
   const router = useRouter();
+  
+  const handleCollectionsNavigation = () => {
+    router.push('/collections');
+  };
+  const handleWishlistNavigation = () => {
+    router.push('/wishlist');
+  };
   const handleInboxNavigation = () => {
     router.push('/inbox');
-  };
-  const handleDashboardNavigation = () => {
-    router.push('/collections');
   };
   const handleHelpNavigation = () => {
     router.push('/help');
@@ -47,17 +51,25 @@ export default function Menu({ collapse }: MenuProps) {
               Hi, I am Olle - Your Collectible Expert.
             </p>
           </div>
-          <button className="rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md sm:text-left text-center w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
-            onClick={() => { toggleMenu(), handleDashboardNavigation() }}>
-            Dashboard
+          <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+            onClick={() => { toggleMenu(), handleCollectionsNavigation() }}>
+              <img src="/menu_icons/items.svg" alt="items" />
+            <p className="flex text-center sm:text-left">Collections</p>
           </button>
-          <button className="rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md sm:text-left text-center w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+          <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+            onClick={() => { toggleMenu(), handleWishlistNavigation() }}>
+              <img src="/menu_icons/wishlist.svg" alt="wishlist" />
+            <p className="flex text-center sm:text-left">Wishlist</p>
+          </button>
+          <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
             onClick={() => { toggleMenu(), handleInboxNavigation() }}>
-            Message Inbox
+              <img src="/menu_icons/notification.svg" alt="notification" />
+            <p className="flex text-center sm:text-left">Message Inbox</p>
           </button>
-          <button className="rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md sm:text-left text-center w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+          <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
             onClick={() => { toggleMenu(), handleHelpNavigation() }}>
-            Help
+              <img src="/menu_icons/help.svg" alt="items" />
+            <p className="flex text-center sm:text-left">Help</p>
           </button>
 
 
