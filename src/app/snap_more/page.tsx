@@ -7,7 +7,7 @@ import Snap from "@/components/Snap"
 
 export default function SnapMore() {
     return (
-        <div className="flex flex-col sm:max-w-6xl w-screen h-screen sm:py-12 sm:px-12  mx-auto">
+        <div className="flex flex-col sm:max-w-6xl w-screen h-dvh sm:py-12 sm:px-12  mx-auto">
             <div className="px-4 sm:px-0 py-4">
             <Menu collapse={true} />
             </div>

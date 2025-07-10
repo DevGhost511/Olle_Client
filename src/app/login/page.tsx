@@ -14,7 +14,7 @@ export default function Page() {
     }
     return (
         <>
-            <div className="flex flex-col items-center justify-start  w-full h-screen py-10 sm:py-30">
+            <div className="flex flex-col items-center justify-start  w-full h-dvh py-10 sm:py-30">
                 <div className="flex flex-col md:w-2xl w-full px-4 items-center justify-center gap-6">
                     <div className="flex flex-col justify-start items-center gap-4">
                         <img src="Logo/mini_logo.svg" alt="logo" />
