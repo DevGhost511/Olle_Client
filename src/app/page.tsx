@@ -14,12 +14,12 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col sm:max-w-6xl w-screen sm:h-screen min-h-screen  sm:py-12  sm:px-12  mx-auto">
+    <div className="flex flex-col sm:max-w-6xl w-screen h-dvh sm:py-12  sm:px-12  mx-auto">
       <div className="w-full px-4 pb-4 pt-2">
       <Menu collapse={true} />
 
       </div>
-      <div className="flex-1 flex flex-col items-around justify-between sm:justify-center sm:gap-40 w-full h-full lg:px-60 md:px-20 sm:px-6 pt-16 sm:pt-0">
+      <div className="flex-1 flex flex-col items-around justify-between sm:justify-center sm:gap-40 sm:w-full min-h-full lg:px-60 md:px-20 sm:px-6 pt-16 sm:pt-0">
         <div className="flex flex-col items-center justify-start gap-4">
           <img src="Logo/Logo.svg" alt="Logo" />
           <p className="font-Geist text-(--brand-6) font-medium text-xl text-center">

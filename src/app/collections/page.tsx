@@ -2,7 +2,7 @@
 import Menu from "@/components/Menu";
 import CollectionCard from "@/components/CollectionCard";
 import Tab from "@/components/Tab";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import PriButton from "@/components/PriButton";
 
 const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
@@ -13,6 +13,7 @@ export default function Dashboard() {
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
     };
+
 
     return (
         <div className="flex flex-col sm:max-w-6xl w-screen h-screen pt-2 sm:py-12 sm:px-12 mx-auto">
