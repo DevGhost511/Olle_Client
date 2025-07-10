@@ -67,7 +67,7 @@ export default function Page () {
     
 
     return (
-        <div className="flex flex-col sm:max-w-6xl w-screen h-screen pt-2 sm:py-12 sm:px-12 mx-auto">
+        <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
             <div className="px-4 sm:px-0 w-full">
                 <Menu collapse={false} />
             </div>

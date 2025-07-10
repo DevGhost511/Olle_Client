@@ -9,7 +9,7 @@ import Valuation from "@/components/Valuation"
 export default function Snap() {
 
   return (
-    <div className="flex flex-col sm:max-w-6xl w-screen h-screen pt-4 sm:py-12 sm:px-12  mx-auto">
+    <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-4 sm:py-12 sm:px-12  mx-auto">
       <div className="w-full px-4 sm:px-0">
       <Menu collapse={true}/>
       </div>
