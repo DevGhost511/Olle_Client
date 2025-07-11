@@ -28,6 +28,9 @@ export default function Menu({ collapse }: MenuProps) {
   const handleHelpNavigation = () => {
     router.push('/help');
   };
+  const handleAddnewNavigation = () => {
+    router.push('/');
+  };
 
   return (
     <div className="flex flex-row items-center justify-between relative w-full">
@@ -39,8 +42,8 @@ export default function Menu({ collapse }: MenuProps) {
 
       <img className={`${collapse ? 'hidden' : 'visible'}`} src="/Logo/nano_logo.svg" alt="logo" />
 
-      <div onClick={handleInboxNavigation} className={`flex justify-center items-center px-3 py-3 rounded-lg hover:bg-(--brand-2) cursor-pointer ${collapse ? 'hidden' : 'visible'}`}>
-        <img src="/bell.svg" alt="bell" />
+      <div onClick={handleAddnewNavigation} className={` flex justify-center items-center p-4 rounded-lg hover:bg-(--brand-2) cursor-pointer ${collapse ? 'hidden' : 'visible'}`}>
+        <img className="w-6 h-6" src="/plus.svg" alt="bell" />
       </div>
 
       {isMenuOpen && (

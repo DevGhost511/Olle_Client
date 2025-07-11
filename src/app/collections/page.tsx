@@ -3,7 +3,7 @@ import Menu from "@/components/Menu";
 import CollectionCard from "@/components/CollectionCard";
 import Tab from "@/components/Tab";
 import { useState , useEffect } from "react";
-import PriButton from "@/components/PriButton";
+import Snap from "@/components/Snap";
 
 const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
 
@@ -55,8 +55,8 @@ export default function Dashboard() {
                     <CollectionCard name="1967  GTB/4" price={1122500} image="Assets/arts2.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
                 </div>)}
             </div>
-            <div className="w-full px-4 sm:px-40  pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-                    <PriButton text="Add Another" icon="camera_white.svg"/>
+            <div className="w-full px-4 sm:px-20 lg:px-40  pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
+                    <Snap/>
              </div>
         </div>
     )
