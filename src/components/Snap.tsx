@@ -1,5 +1,5 @@
 'use client'
-import { fileUpload } from "@/api/private";
+import { fileUpload } from "@/api/public";
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation";
 
