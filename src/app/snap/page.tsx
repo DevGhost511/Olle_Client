@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import { imageIdentify } from "@/api/public"
 
 export default function Page() {
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
