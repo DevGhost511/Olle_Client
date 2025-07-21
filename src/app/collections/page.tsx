@@ -2,7 +2,7 @@
 import Menu from "@/components/Menu";
 import CollectionCard from "@/components/CollectionCard";
 import Tab from "@/components/Tab";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import Snap from "@/components/Snap";
 
 const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
@@ -12,6 +12,10 @@ export default function Dashboard() {
     const [activeTab, setActiveTab] = useState(tabNames[0]);
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
+    };
+    const [prompt, setPrompt] = useState<string>("");
+    const handleSetPrompt = (prompt: string) => {
+        setPrompt(prompt);
     };
 
 
@@ -36,7 +40,7 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="flex flex-col justify-start items-start w-full px-4 sm:px-0">
-            <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" />
+                <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" />
             </div>
             <div className="flex flex-1 flex-col w-full justify-start overflow-auto gap-6 px-4 sm:px-0">
 
@@ -56,8 +60,8 @@ export default function Dashboard() {
                 </div>)}
             </div>
             <div className="w-full px-4 sm:px-20 lg:px-40  pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-                    <Snap/>
-             </div>
+                <Snap onChange={handleSetPrompt} />
+            </div>
         </div>
     )
 }

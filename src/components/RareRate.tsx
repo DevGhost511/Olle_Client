@@ -1,8 +1,9 @@
 type RareRateProps = {
     rarerate: number;
+    iconsize: string;
 }
 
-export default function RareRate({rarerate}: RareRateProps) {
+export default function RareRate({rarerate, iconsize}: RareRateProps) {
 
     return (
         <>
@@ -10,9 +11,9 @@ export default function RareRate({rarerate}: RareRateProps) {
                 <p className="text-md font-normal">
                     RareRate
                 </p>
-                <div className="flex flex-row items-center justify-start gap-2">
+                <div className={`flex flex-row items-center justify-start gap-2 `}>
                     {Array.from({ length: 5 }, (_, index) => (
-                        <img key={index} src={index < rarerate ? "Polygon.svg" : "PolygonLight.svg"} alt="Polygon" />
+                        <img className={`${iconsize}`} key={index} src={index < rarerate ? "Polygon.svg" : "PolygonLight.svg"} alt="Polygon" />
                     ))}
                 </div>
             </div>

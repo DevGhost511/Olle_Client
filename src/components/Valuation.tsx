@@ -10,7 +10,7 @@ export default function Valuation ({value} : ValuationProps) {
                 <p className="text-md font-normal">
                     Estimated Value
                 </p>
-                <p className=" text-xl font-semibold">
+                <p className=" text-3xl font-abril-fatface">
                     ${value}
                 </p>
             </div>

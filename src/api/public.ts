@@ -18,3 +18,10 @@ export const imageIdentify = async (imageUrl: string, prompt: string) => {
     });
     return res.data;
 }
+
+export const olleAIChat = async (prompt: string) => {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/openai/chat`, {
+        prompt
+    });
+    return res.data;
+}
