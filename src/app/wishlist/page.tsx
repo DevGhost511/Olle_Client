@@ -5,10 +5,27 @@ import Tab from "@/components/Tab";
 import { useState } from "react";
 import Snap from "@/components/Snap";
 import WishlistCard from "@/components/WishlistCard";
+import { olleAIChat } from "@/api/public";
 
 const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
 
 export default function Page() {
+
+      const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
+      
+
+      const handleChats = (chat: { role: string, content: string }) => {
+    setChats(prev => [...prev, chat]);
+  };
+      const [chattingLoading, setChattingLoading] = useState<boolean>(false);
+
+      const handleSetPrompt = async (prompt: string) => {
+        setChattingLoading(true);
+        handleChats({ role: 'user', content: prompt })
+        const res = await olleAIChat(prompt);
+        handleChats({ role: 'olleAI', content: res.message.content })
+        setChattingLoading(false);
+      };
 
     const [activeTab, setActiveTab] = useState(tabNames[0]);
     const handleTabChange = (tab: string) => {
@@ -48,7 +65,7 @@ export default function Page() {
                 </div>)}
             </div>
             <div className="w-full px-4 sm:px-20 lg:px-40  pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-                <Snap />
+                <Snap onChange={handleSetPrompt} />
             </div>
         </div>
     )

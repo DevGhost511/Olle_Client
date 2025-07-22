@@ -2,10 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import EmailInput from "@/components/EmailInput"
-import PasswordInput from "@/components/PasswordInput"
 import PriButton from "@/components/PriButton"
 import SecButton from "@/components/SecButton"
+import Input from "@/components/Input"
 
 export default function Login() {
 
@@ -33,8 +32,8 @@ export default function Login() {
                         Create An Account
                     </p>
                     <div className="w-full flex flex-col gap-4">
-                        <EmailInput />
-                        <PasswordInput />
+                        <Input type="email" placeholder="Enter Your Email" />
+                        <Input type="password" placeholder="Enter Your Password" />
 
                     </div>
 

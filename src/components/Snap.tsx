@@ -2,14 +2,12 @@
 import { fileUpload } from "@/api/public";
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation";
-import SecButton from "./SecButton";
 
 type Props = {
     onChange: (prompt: string) => void;
-    collapse: boolean;
 }
 
-export default function Snap({ onChange, collapse }: Props) {
+export default function Snap({ onChange }: Props) {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);

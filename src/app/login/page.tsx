@@ -1,7 +1,6 @@
 'use client'
 
-import EmailInput from "@/components/EmailInput"
-import PasswordInput from "@/components/PasswordInput"
+import Input from "@/components/Input"
 import PriButton from "@/components/PriButton"
 import SecButton from "@/components/SecButton"
 import { useRouter } from "next/navigation"
@@ -26,13 +25,13 @@ export default function Page() {
                         Login to Your Account
                     </p>
                     <div className="w-full flex flex-col gap-4">
-                        <EmailInput />
-                        <PasswordInput />
+                        <Input type="email" placeholder="Enter Your Email" />
+                        <Input type="password" placeholder="Enter Your Password" />
                     </div>
                     <div className="flex flex-col w-full items-center justify-center gap-4">
-                    <PriButton text="Login" />
-                    <p className="flex flex-row w-full text-md text-center justify-center text-(--black-4)"> Or </p>
-                    <SecButton text="Login with Google" icon="google_brand.svg"/>
+                        <PriButton text="Login" />
+                        <p className="flex flex-row w-full text-md text-center justify-center text-(--black-4)"> Or </p>
+                        <SecButton text="Login with Google" icon="google_brand.svg" />
                     </div>
                     <p className="flex w-full text-left text-(--black-5) text-md">
                         If you don’t have an account

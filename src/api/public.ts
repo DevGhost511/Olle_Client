@@ -20,7 +20,7 @@ export const imageIdentify = async (imageUrl: string, prompt: string) => {
 }
 
 export const olleAIChat = async (prompt: string) => {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/openai/chat`, {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/olle-chat`, {
         prompt
     });
     return res.data;

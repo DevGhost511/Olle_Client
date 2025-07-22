@@ -5,22 +5,39 @@ import SecButton from "@/components/SecButton"
 import Valuation from "@/components/Valuation"
 import Snap from "@/components/Snap"
 import { useEffect, useState, useRef } from "react"
-import Router from "next/navigation"
 import { imageIdentify, olleAIChat } from "@/api/public"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { useRouter } from "next/navigation"
+
+
+
 
 
 export default function Page() {
 
-  
-
+  const router = useRouter();
+  const handleSignupNavication = () => {
+    router.push("/signup");
+  }
   const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
+  const [showScrollButtons, setShowScrollButtons] = useState<boolean>(false);
+  const [canScrollUp, setCanScrollUp] = useState<boolean>(false);
+  const [canScrollDown, setCanScrollDown] = useState<boolean>(false);
+  const [image, setImage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [chattingLoading, setChattingLoading] = useState<boolean>(false);
+  const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
+  const [collectionName, setCollectionName] = useState<string>("");
+  const [collectionPrice, setCollectionPrice] = useState<number[]>([]);
+  const [collectionRareRate, setCollectionRareRate] = useState<number>(0);
+  const [collectionDescription, setCollectionDescription] = useState<string>("");
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      console.log("chats updated")
+      containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
     }
   }, [chats]);
 
@@ -28,21 +45,60 @@ export default function Page() {
     setChats(prev => [...prev, chat]);
   };
 
-  const [image, setImage] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [chattingLoading, setChattingLoading] = useState<boolean>(false);
+
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+      const isScrollable = scrollHeight > clientHeight;
+
+      setShowScrollButtons(isScrollable);
+      setCanScrollUp(scrollTop > 100); // Show up arrow when scrolled down more than 100px
+      setCanScrollDown(scrollTop < scrollHeight - clientHeight - 100); // Show down arrow when not near bottom
+    }
+  };
+
+  const scrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      handleScroll();
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [isLoading]);
+
+  const handleIsStartChatting = () => {
+    setIsStartChatting(true);
+  }
+
   const handleSetPrompt = async (prompt: string) => {
     setChattingLoading(true);
     handleChats({ role: 'user', content: prompt })
+    handleIsStartChatting();
     const res = await olleAIChat(prompt);
     handleChats({ role: 'olleAI', content: res.message.content })
     setChattingLoading(false);
   };
-
-  const [collectionName, setCollectionName] = useState<string>("");
-  const [collectionPrice, setCollectionPrice] = useState<number[]>([]);
-  const [collectionRareRate, setCollectionRareRate] = useState<number>(0);
-  const [collectionDescription, setCollectionDescription] = useState<string>("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -98,36 +154,65 @@ export default function Page() {
       <div className="w-full px-4 sm:px-0">
         <Menu collapse={false} />
       </div>
-      <div  className="flex flex-1 flex-col w-full overflow-auto">
+      {!isLoading && (
+        <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
+          <p className="sm:px-10 md:px-20 lg:px-40 font-abril-fatface w-fit text-(--black-5) font-semiblod text-2xl text-center">
+            {collectionName}
+          </p>
+        </div>
+      )}
+
+      {showScrollButtons && !isLoading && (
+        <div className={`sm:hidden fixed right-4 sm:right-130 top-3/4 transform -translate-y-1/4 flex flex-col gap-2 z-50`}>
+          {canScrollUp && (
+            <button
+              onClick={scrollToTop}
+              className="w-16 h-16 bg-white cursor-pointer border-1  border-(--brand-6) rounded-full  flex items-center justify-center transition-all duration-200 hover:scale-105"
+              aria-label="Scroll to top"
+            >
+              <svg
+                className="w-6 h-6 text-(--brand-6)"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
+            </button>
+          )}
+
+        </div>
+      )}
+
+
+      <div className="flex flex-1 flex-col w-full overflow-auto">
         {isLoading ? (<div className="flex flex-col flex-1 w-full">
           <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
             <div className="flex flex-1 flex-col w-full justify-start pt-16 sm:pt-24 items-center gap-8">
               <p className="text-xl text-(--brand-6) font-medium text-center">
                 Olle AI is thinking...
               </p>
-              <div className="w-12 h-12 animate-spin rounded-full border-2 border-(--brand-6) border-t-transparent"></div>          </div>
+              <div className="w-12 h-12 animate-spin rounded-full border-4 border-(--brand-5) border-t-transparent"></div>          </div>
           </div>
         </div>) : (
-          (<div className="flex flex-col flex-1 overflow-auto w-full">
-            <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
-              <div className="flex flex-wrap justify-center items-center gap-2 md:pt-6">
-                <p className="sm:px-10 md:px-20 lg:px-40 font-abril-fatface w-fit text-(--black-5) font-semiblod text-2xl text-center">
-                  {collectionName}
-                </p>
-              </div>
-            </div>
-            <div className="sm:px-10 md:px-20 lg:px-40 flex flex-col flex-1 rounded-2xl overflow-auto  items-center justify-start gap-3 px-4 w-full  ">
+          (<div ref={containerRef} className="flex flex-col flex-1 overflow-auto w-full">
+
+            <div className={`sm:px-10 md:px-20 lg:px-40 flex flex-col ${determined && `flex-1`} rounded-2xl items-center justify-start gap-3 px-4 w-full`}>
               <div className="w-full flex flex-col flex-1 overflow-auto gap-4 ">
-                <div className="w-full flex flex-col ">
+                <div className={`w-full flex flex-col ${!determined && `flex-1 overflow-auto`} gap-4`}>
                   <img src={image} alt="Snap Image" className="rounded-xl w-full sm:w-full sm:h-80 h-80 object-cover border-1 border-(--brand-3)" />
-                </div>
-                {!determined ? (
-                  <div className="flex flex-col gap-4">
+                  {!determined && (
                     <p className="text-md text-(--black-4)">
                       {collectionDescription}
                     </p>
+                  )}
+
+                </div>
+                {!determined ? (
+                  <div className="flex flex-col gap-4">
+
                     <p className="text-(--black-5) text-xl font-medium w-full text-center ">
-                      Are you sure this is your collection?
+                      Is this correct?
                     </p>
                     <div className="flex flex-row justify-center w-full items-center gap-3">
                       <SecButton text="Yes" onClick={handleDetermine} />
@@ -185,17 +270,29 @@ export default function Page() {
 
                     </div>
                     <p className="text-md text-(--black-4)">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                      {collectionDescription}
                     </p>
                   </div>
 
                 )}
                 <div className="flex flex-col w-full gap-4 py-2">
                   {
+                    isStartChatting && (
+                      <p className="font-abril-fatface text-xl text-(--black-5) text-center w-full">
+                        Chat with Olle AI
+                      </p>
+                    )
+                  }
+
+
+                  {
                     chats.map((chat, index) => {
                       return (
                         <div key={index} className={`flex flex-col w-full justify-start ${chat.role === 'user' ? `items-end` : `items-start`} gap-1 `}>
-                          <div className="flex py-2 px-2 rounded-lg bg-(--brand-2) max-w-3/4">
+                          <div className="flex flex-col justify-start gap-2 py-2 px-2 rounded-lg bg-(--brand-2) max-w-3/4 ">
+                            {chat.role === 'olleAI' && (
+                              <img className="w-16" src="/Logo/olleAI.svg" alt="olle AI logo" />
+                            )}
                             <p className="text-lg text-(--black-5)">{chat.content}</p>
                           </div>
                         </div>
@@ -203,6 +300,19 @@ export default function Page() {
                     }
                     )
                   }
+
+                  {determined && isStartChatting && chattingLoading && (
+                    <div className="flex flex-col justify-start gap-2 py-2 px-2 rounded-lg bg-(--brand-2) w-fit max-w-3/4 text-lg text-(--brand-5)">
+                      <img className="w-16" src="/Logo/olleAI.svg" alt="olle AI logo" />
+                      <div className="flex flex-row gap-2 items-center justify-start">
+                        <div className="w-4 h-4 animate-spin rounded-full border-1 border-(--brand-5) border-t-transparent"></div>
+
+                        <p>olle is thinking...</p>
+                      </div>
+                    </div>
+                  )}
+
+
                 </div>
               </div>
             </div>
@@ -211,18 +321,19 @@ export default function Page() {
         {determined && (
           <div className="flex flex-row p-4 gap-3 w-full sm:px-10 md:px-20 lg:px-40">
             <div className="flex flex-row justify-center w-full items-center gap-3">
-              <SecButton text="Add to Collection" />
-              <SecButton text="Add to Wishlist" />
+              <SecButton text="Add to Collection" onClick={handleSignupNavication} />
+              <SecButton text="Add to Wishlist" onClick={handleSignupNavication} />
             </div>
           </div>
         )}
       </div>
 
+      {!isLoading && determined && (
+        <div className="flex flex-col w-full px-4 sm:px-10 md:px-20 lg:px-40 gap-4 pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
+          <Snap onChange={handleSetPrompt} />
+        </div>
+      )}
 
-      <div className="flex flex-col w-full px-4 sm:px-10 md:px-20 lg:px-40 gap-4 pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-
-        <Snap onChange={handleSetPrompt} collapse={!isLoading} />
-      </div>
     </div>
   )
 }
