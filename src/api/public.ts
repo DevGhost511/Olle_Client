@@ -11,17 +11,48 @@ export const fileUpload = async (file: File) => {
     return res.data;
 }
 
-export const imageIdentify = async (imageUrl: string, prompt: string) => {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/openai/image-identify`, {
-        imageUrl,
+export const imageIdentify = async (threadId: string, prompt: string, image_url: string) => {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/image-identify`, {
+        threadId,
+        image_url,
         prompt
     });
     return res.data;
 }
 
-export const olleAIChat = async (prompt: string) => {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/olle-chat`, {
-        prompt
-    });
-    return res.data;
-}
+export const olleAIChatStream = (threadId: string, prompt: string, onMessage: (msg: string) => void, onStatus: (status: string) => void, onEnd: () => void) => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/olle-chat?threadId=${encodeURIComponent(threadId)}&prompt=${encodeURIComponent(prompt)}`;
+    const eventSource = new EventSource(url);
+
+    eventSource.onmessage = (event) => {
+        if (event.data === '[DONE]') {
+            eventSource.close();
+            onEnd();
+        } else {
+            try {
+                const parsed = JSON.parse(event.data);
+                if (parsed.event === "thread.message.in_progress") {
+                    // Assistant is preparing, show loading
+                    onStatus("in_progress");
+                } else if (parsed.event === "thread.message.delta") {
+                    const text = parsed?.data?.delta?.content?.[0]?.text?.value;
+                    if (text) {
+                        onMessage(text);
+                    }
+                }
+            } catch (e) {
+                // Optionally handle parse errors
+                console.error('Failed to parse SSE chunk:', e, event.data);
+            }
+        }
+    };
+
+    eventSource.onerror = () => {
+        eventSource.close();
+        onEnd();
+    };
+
+    return eventSource;
+};
+
+

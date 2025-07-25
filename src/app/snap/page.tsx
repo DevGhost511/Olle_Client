@@ -5,13 +5,10 @@ import SecButton from "@/components/SecButton"
 import Valuation from "@/components/Valuation"
 import Snap from "@/components/Snap"
 import { useEffect, useState, useRef } from "react"
-import { imageIdentify, olleAIChat } from "@/api/public"
+import { imageIdentify, olleAIChatStream } from "@/api/public"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useRouter } from "next/navigation"
-
-
-
-
+import ReactMarkdown from 'react-markdown';
 
 export default function Page() {
 
@@ -91,13 +88,38 @@ export default function Page() {
     setIsStartChatting(true);
   }
 
-  const handleSetPrompt = async (prompt: string) => {
+  const handleSetPrompt = (prompt: string) => {
     setChattingLoading(true);
-    handleChats({ role: 'user', content: prompt })
+    handleChats({ role: 'user', content: prompt });
     handleIsStartChatting();
-    const res = await olleAIChat(prompt);
-    handleChats({ role: 'olleAI', content: res.message.content })
-    setChattingLoading(false);
+
+    let fullMessage = '';
+    let receivedFirstChunk = false;
+    olleAIChatStream(
+      "thread_NjBeWAwjzfNC1nnBjnigmrYA",
+      prompt,
+      (chunk) => {
+        if (!receivedFirstChunk) {
+          setChattingLoading(false);
+          receivedFirstChunk = true;
+        }
+        fullMessage += chunk;
+        setChats(prev => {
+          if (prev.length && prev[prev.length - 1].role === 'olleAI') {
+            return [
+              ...prev.slice(0, -1),
+              { role: 'olleAI', content: fullMessage }
+            ];
+          } else {
+            return [...prev, { role: 'olleAI', content: fullMessage }];
+          }
+        });
+      },
+      () => {}, // onStatus no-op
+      () => {
+        setChattingLoading(false);
+      }
+    );
   };
 
   useEffect(() => {
@@ -105,10 +127,10 @@ export default function Page() {
       const imageUrl = localStorage.getItem('imageUrl');
       if (imageUrl) {
         setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl);
-        imageIdentify("https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui", "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one paragraph description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style: { \"name\" : String, \"price\": number[], \"rarerate\": number}, \"description\" : String,")
+        imageIdentify("thread_3v23Z3JEG0eom2bjrea0aeVw", "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one-paragraph Description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style so that I can parse to json it: { \"name\" : String, \"price\": number[], \"rarerate\": number, \"description\" : String } ", "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
           .then(res => {
-            console.log(res.message.content)
-            const obj = JSON.parse(res.message.content)
+            console.log(res)
+            const obj = JSON.parse(res.reply)
             setCollectionName(obj.name);
             setCollectionPrice(obj.price);
             setCollectionRareRate(obj.rarerate);
@@ -289,11 +311,11 @@ export default function Page() {
                     chats.map((chat, index) => {
                       return (
                         <div key={index} className={`flex flex-col w-full justify-start ${chat.role === 'user' ? `items-end` : `items-start`} gap-1 `}>
-                          <div className="flex flex-col justify-start gap-2 py-2 px-2 rounded-lg bg-(--brand-2) max-w-3/4 ">
+                          <div className="flex flex-col justify-start gap-2 py-2 px-2 rounded-lg bg-(--brand-2) max-w-4/5 ">
                             {chat.role === 'olleAI' && (
                               <img className="w-16" src="/Logo/olleAI.svg" alt="olle AI logo" />
                             )}
-                            <p className="text-lg text-(--black-5)">{chat.content}</p>
+                            <p className="text-lg text-(--black-5)">{chat.role === 'olleAI' ? <ReactMarkdown>{chat.content}</ReactMarkdown> : chat.content}</p>
                           </div>
                         </div>
                       )
