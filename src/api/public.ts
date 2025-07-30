@@ -11,7 +11,7 @@ export const fileUpload = async (file: File) => {
     return res.data;
 }
 
-export const imageIdentify = async (threadId: string, prompt: string, image_url: string) => {
+export const imageIdentify = async (threadId: string | null, prompt: string, image_url: string) => {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/image-identify`, {
         threadId,
         image_url,
@@ -20,7 +20,13 @@ export const imageIdentify = async (threadId: string, prompt: string, image_url:
     return res.data;
 }
 
-export const olleAIChatStream = (threadId: string, prompt: string, onMessage: (msg: string) => void, onStatus: (status: string) => void, onEnd: () => void) => {
+export const olleAIChatStream = (threadId: string | null, prompt: string, onMessage: (msg: string) => void, onStatus: (status: string) => void, onEnd: () => void) => {
+    if (!threadId) {
+        console.error('ThreadID is required for AI chat stream');
+        onEnd();
+        return null;
+    }
+    
     const url = `${process.env.NEXT_PUBLIC_API_URL}/olle-chat?threadId=${encodeURIComponent(threadId)}&prompt=${encodeURIComponent(prompt)}`;
     const eventSource = new EventSource(url);
 
