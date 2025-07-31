@@ -115,7 +115,7 @@ export default function Page() {
           }
         });
       },
-      () => {}, // onStatus no-op
+      () => { }, // onStatus no-op
       () => {
         setChattingLoading(false);
       }
@@ -128,7 +128,7 @@ export default function Page() {
       if (imageUrl) {
         setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl);
         console.log(image);
-        imageIdentify("thread_3v23Z3JEG0eom2bjrea0aeVw", "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one-paragraph Description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style so that I can parse to json it: { \"name\" : String, \"price\": number[], \"rarerate\": number, \"description\" : String } ", process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+        imageIdentify("thread_FTxK3PYZBFrW9A3dR6EkPXN3", "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one-paragraph Description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style so that I can parse to json it: { \"name\" : String, \"price\": number[], \"rarerate\": number, \"description\" : String } ", process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
           .then(res => {
             console.log(res)
             const obj = JSON.parse(res.reply)
