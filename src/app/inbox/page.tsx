@@ -5,6 +5,8 @@ import Menu from "@/components/Menu"
 import Tab from "@/components/Tab"
 import MessageCard from "@/components/MessageCard"
 import Snap from "@/components/Snap"
+import { imageIdentify, olleAIChatStream } from "@/api/public"
+
 
 const tabNames = ["All", "Inquiries", "Matches"]
 
@@ -60,11 +62,56 @@ const Message = [
 
 export default function Page () {
 
+      const [chattingLoading, setChattingLoading] = useState<boolean>(false);
+  const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
+  const handleIsStartChatting = () => {
+    setIsStartChatting(true);
+  }
+    const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
+
+
     const [activeTab, setActiveTab] = useState(tabNames[0]);
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
     };
+    const handleChats = (chat: { role: string, content: string }) => {
+    setChats(prev => [...prev, chat]);
+  };
     
+
+    const handleSetPrompt = (prompt: string) => {
+        setChattingLoading(true);
+        handleChats({ role: 'user', content: prompt });
+        handleIsStartChatting();
+    
+        let fullMessage = '';
+        let receivedFirstChunk = false;
+        olleAIChatStream(
+          "thread_NjBeWAwjzfNC1nnBjnigmrYA",
+          prompt,
+          (chunk) => {
+            if (!receivedFirstChunk) {
+              setChattingLoading(false);
+              receivedFirstChunk = true;
+            }
+            fullMessage += chunk;
+            setChats(prev => {
+              if (prev.length && prev[prev.length - 1].role === 'olleAI') {
+                return [
+                  ...prev.slice(0, -1),
+                  { role: 'olleAI', content: fullMessage }
+                ];
+              } else {
+                return [...prev, { role: 'olleAI', content: fullMessage }];
+              }
+            });
+          },
+          () => {}, // onStatus no-op
+          () => {
+            setChattingLoading(false);
+          }
+        );
+      };
 
     return (
         <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
@@ -97,7 +144,7 @@ export default function Page () {
 
             </div>
             <div className="w-full px-4 pt-4 pb-6 sm:p-0 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-                <Snap />
+                <Snap onChange={handleSetPrompt}/>
 
             </div>
         </div>
