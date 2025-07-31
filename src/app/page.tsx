@@ -35,7 +35,7 @@ export default function Home() {
     let fullMessage = '';
     let receivedFirstChunk = false;
     olleAIChatStream(
-      "thread_NjBeWAwjzfNC1nnBjnigmrYA",
+      "thread_FTxK3PYZBFrW9A3dR6EkPXN3",
       prompt,
       (chunk) => {
         if (!receivedFirstChunk) {
