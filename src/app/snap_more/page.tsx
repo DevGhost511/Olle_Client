@@ -30,9 +30,6 @@ export default function SnapMore() {
                     </div>
                 </div>
                 </div>
-                <div className="w-full px-4 sm:px-15 pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-                    <Snap />
-                </div>
             </div>
 
 
