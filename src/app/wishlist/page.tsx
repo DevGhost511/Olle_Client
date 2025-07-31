@@ -5,27 +5,59 @@ import Tab from "@/components/Tab";
 import { useState } from "react";
 import Snap from "@/components/Snap";
 import WishlistCard from "@/components/WishlistCard";
-import { olleAIChat } from "@/api/public";
+import { olleAIChatStream } from "@/api/public";
 
 const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
 
 export default function Page() {
 
       const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
-      
+        const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
+
 
       const handleChats = (chat: { role: string, content: string }) => {
     setChats(prev => [...prev, chat]);
   };
       const [chattingLoading, setChattingLoading] = useState<boolean>(false);
 
-      const handleSetPrompt = async (prompt: string) => {
-        setChattingLoading(true);
-        handleChats({ role: 'user', content: prompt })
-        const res = await olleAIChat(prompt);
-        handleChats({ role: 'olleAI', content: res.message.content })
+
+        const handleIsStartChatting = () => {
+    setIsStartChatting(true);
+  }
+
+  const handleSetPrompt = (prompt: string) => {
+    setChattingLoading(true);
+    handleChats({ role: 'user', content: prompt });
+    handleIsStartChatting();
+
+    let fullMessage = '';
+    let receivedFirstChunk = false;
+    olleAIChatStream(
+      "thread_NjBeWAwjzfNC1nnBjnigmrYA",
+      prompt,
+      (chunk) => {
+        if (!receivedFirstChunk) {
+          setChattingLoading(false);
+          receivedFirstChunk = true;
+        }
+        fullMessage += chunk;
+        setChats(prev => {
+          if (prev.length && prev[prev.length - 1].role === 'olleAI') {
+            return [
+              ...prev.slice(0, -1),
+              { role: 'olleAI', content: fullMessage }
+            ];
+          } else {
+            return [...prev, { role: 'olleAI', content: fullMessage }];
+          }
+        });
+      },
+      () => {}, // onStatus no-op
+      () => {
         setChattingLoading(false);
-      };
+      }
+    );
+  };
 
     const [activeTab, setActiveTab] = useState(tabNames[0]);
     const handleTabChange = (tab: string) => {
