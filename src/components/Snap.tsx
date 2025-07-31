@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 
 type Props = {
     onChange: (prompt: string) => void;
+    onImageUpload?: () => void;
 }
 
-export default function Snap({ onChange }: Props) {
+export default function Snap({ onChange, onImageUpload }: Props) {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -39,6 +40,9 @@ export default function Snap({ onChange }: Props) {
         const res = await fileUpload(file);
         localStorage.setItem('imageUrl', res.info.path);
         handleNavigation();
+        if (typeof onImageUpload === 'function') {
+          onImageUpload();
+        }
     }
 
     const router = useRouter();
