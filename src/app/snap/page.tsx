@@ -133,8 +133,8 @@ export default function Page() {
     setTimeout(() => {
       const imageUrl = localStorage.getItem('imageUrl');
       if (imageUrl) {
-        // setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
-        setImage('https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui');
+        setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+        // setImage('https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui');
         setIsLoading(true);
         const prompt =
           `Analyze this image to identify if it contains a collectible item from these categories: Car, Watch, or Art. 
@@ -156,7 +156,7 @@ export default function Page() {
         }`
         // imageIdentify(null, "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one-paragraph Description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style so that I can parse to json it: { \"name\" : String, \"price\": number[], \"rarerate\": number, \"description\" : String } ", process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
         // imageIdentify(null, prompt, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
-        imageIdentify(null, prompt, "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
+        imageIdentify(null, prompt, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
           .then(res => {
             setThreadId(res.threadId); // Save the new threadId
             let obj = null;
