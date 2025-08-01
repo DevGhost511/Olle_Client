@@ -133,40 +133,49 @@ export default function Page() {
     setTimeout(() => {
       const imageUrl = localStorage.getItem('imageUrl');
       if (imageUrl) {
-        setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl);
+        // setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+        setImage('https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui');
         setIsLoading(true);
         imageIdentify(null, "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one-paragraph Description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style so that I can parse to json it: { \"name\" : String, \"price\": number[], \"rarerate\": number, \"description\" : String } ", process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
           .then(res => {
             setThreadId(res.threadId); // Save the new threadId
-            const obj = JSON.parse(res.reply)
-            setCollectionName(obj.name);
-            setCollectionPrice(obj.price);
-            setCollectionRareRate(obj.rarerate);
-            setCollectionDescription(obj.description)
+            let obj = null;
+            try {
+              obj = JSON.parse(res.reply)
+              setCollectionName(obj.name);
+              setCollectionPrice(obj.price);
+              setCollectionRareRate(obj.rarerate);
+              setCollectionDescription(obj.description)
+            } catch (err) {
+              console.error(err);
+            }
+
+            setIsLoading(false);
+          }).catch(err => {
+            console.error(err);
             setIsLoading(false);
           });
-
       }
     }, 1000)
   }, [])
 
   // Reset threadId when a new image is uploaded (listen to imageUrl change in localStorage)
-  useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === 'imageUrl') {
-        setThreadId(null);
-        setChats([]);
-        setCollectionName("");
-        setCollectionPrice([]);
-        setCollectionRareRate(0);
-        setCollectionDescription("");
-        setIsStartChatting(false);
-        setDetermined(false);
-      }
-    };
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
+  // useEffect(() => {
+  //   const handleStorage = (event: StorageEvent) => {
+  //     if (event.key === 'imageUrl') {
+  //       setThreadId(null);
+  //       setChats([]);
+  //       setCollectionName("");
+  //       setCollectionPrice([]);
+  //       setCollectionRareRate(0);
+  //       setCollectionDescription("");
+  //       setIsStartChatting(false);
+  //       setDetermined(false);
+  //     }
+  //   };
+  //   window.addEventListener('storage', handleStorage);
+  //   return () => window.removeEventListener('storage', handleStorage);
+  // }, []);
 
 
   const generateChartData = () => {
@@ -378,16 +387,16 @@ export default function Page() {
       {!isLoading && determined && (
         <div className="flex flex-col w-full px-4 sm:px-10 md:px-20 lg:px-40 gap-4 pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
           <Snap onChange={handleSetPrompt}
-                onImageUpload={() => {
-                  setThreadId(null);
-                  setChats([]);
-                  setCollectionName("");
-                  setCollectionPrice([]);
-                  setCollectionRareRate(0);
-                  setCollectionDescription("");
-                  setIsStartChatting(false);
-                  setDetermined(false);
-                }}
+            onImageUpload={() => {
+              setThreadId(null);
+              setChats([]);
+              setCollectionName("");
+              setCollectionPrice([]);
+              setCollectionRareRate(0);
+              setCollectionDescription("");
+              setIsStartChatting(false);
+              setDetermined(false);
+            }}
           />
         </div>
       )}

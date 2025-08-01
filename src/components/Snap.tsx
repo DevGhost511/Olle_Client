@@ -2,6 +2,7 @@
 import { fileUpload } from "@/api/public";
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation";
+import { compressImage } from "@/utils";
 
 type Props = {
     onChange: (prompt: string) => void;
@@ -32,16 +33,29 @@ export default function Snap({ onChange, onImageUpload }: Props) {
             return;
         }
 
-        await uploadImage(file);
+        if (file.size > 250 * 1024) {
+            const compressedFile = await compressImage(file);
+            await uploadImage(compressedFile);
+        } else {
+            await uploadImage(file);
+        }
     }
+
+
 
     const uploadImage = async (file: File) => {
         setIsUploading(true);
-        const res = await fileUpload(file);
-        localStorage.setItem('imageUrl', res.info.path);
-        handleNavigation();
-        if (typeof onImageUpload === 'function') {
-          onImageUpload();
+        try {
+            const res = await fileUpload(file);
+            localStorage.setItem('imageUrl', res.info.path);
+            handleNavigation();
+            if (typeof onImageUpload === 'function') {
+                onImageUpload();
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsUploading(false);
         }
     }
 
@@ -53,7 +67,7 @@ export default function Snap({ onChange, onImageUpload }: Props) {
 
     return (
         <div className="flex flex-col items-center justify-around gap-3 w-full">
-            
+
             <div className="flex flex-row items-center justify-around gap-3 rounded-xl border border-(--black-2) [&:has(input:focus)]:border-(--brand-6) [&:has(input:focus)]:outline-4 [&:has(input:focus)]:outline-(--brand-3) w-full bg-white px-1 py-1 ">
                 <div className="flex flex-row items-center justify-start gap-4 w-full">
                     <button
