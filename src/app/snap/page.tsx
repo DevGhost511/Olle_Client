@@ -104,7 +104,7 @@ export default function Page() {
     }
     olleAIChatStream(
       threadId, // Use the threadId from state
-      prompt,
+      `Please respond in natural, conversational text format. Do not use JSON or structured data format. Just provide helpful - User: ${prompt}`,
       (chunk) => {
         if (!receivedFirstChunk) {
           setChattingLoading(false);
@@ -136,18 +136,42 @@ export default function Page() {
         // setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
         setImage('https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui');
         setIsLoading(true);
-        imageIdentify(null, "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one-paragraph Description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style so that I can parse to json it: { \"name\" : String, \"price\": number[], \"rarerate\": number, \"description\" : String } ", process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+        const prompt =
+          `Analyze this image to identify if it contains a collectible item from these categories: Car, Watch, or Art. 
+
+        If a collectible is found, provide:
+        - name: Detailed model/title including brand and specific model
+        - rarerate: Rarity score from 1 (common) to 5 (extremely rare)
+        - price: Array of 10 estimated market values in USD (6-month intervals from 2020 to now)
+        - description: One paragraph including production date, origin, and key details
+
+        If no collectible is identified, return: {"message": "No collectible found"}
+
+        Response format (JSON only, no additional text):
+        {
+          "name": "string",
+          "rarerate": number,
+          "price": [number array],
+          "description": "string"
+        }`
+        // imageIdentify(null, "I just want to identify a collection in this image. Car, Watch or Art collection.  give me name(detailed model including), Rarerate, Price(10 numbers for every 6 monthes from 2020 to now ), one-paragraph Description(including produce date and where it is produced) about that. Rarerate should be one value of 1,2,3,4,5.  If this image doesn't include any collection answer there isn't any collection. No need any complex context. Only give me 3 words in this style so that I can parse to json it: { \"name\" : String, \"price\": number[], \"rarerate\": number, \"description\" : String } ", process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+        // imageIdentify(null, prompt, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+        imageIdentify(null, prompt, "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
           .then(res => {
             setThreadId(res.threadId); // Save the new threadId
             let obj = null;
             try {
-              obj = JSON.parse(res.reply)
+              obj = res.reply
               setCollectionName(obj.name);
               setCollectionPrice(obj.price);
               setCollectionRareRate(obj.rarerate);
               setCollectionDescription(obj.description)
             } catch (err) {
               console.error(err);
+              setCollectionName("No collection");
+              setCollectionPrice([]);
+              setCollectionRareRate(0);
+              setCollectionDescription("");
             }
 
             setIsLoading(false);
