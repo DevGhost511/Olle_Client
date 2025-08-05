@@ -1,9 +1,7 @@
-import { useCallback, useRef, useState, forwardRef, useImperativeHandle } from "react";
+import { useCallback, useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import Webcam from "react-webcam";
 
 interface WebCameraProps {
-  width?: number;
-  height?: number;
   className?: string;
 }
 
@@ -12,13 +10,16 @@ export interface WebCameraRef {
 }
 
 const WebCamera = forwardRef<WebCameraRef, WebCameraProps>(({ 
-  width = 640, 
-  height = 480, 
   className = "" 
 }, ref) => {
     const webcamRef = useRef<Webcam>(null);
     const [isCameraLoading, setIsCameraLoading] = useState(true);
     const [isCameraError, setIsCameraError] = useState(false);
+    const [deviceDimensions, setDeviceDimensions] = useState({
+        width: 1920,
+        height: 1080,
+        aspectRatio: 16/9
+    });
 
     const capture = useCallback(() => {
         if (webcamRef.current) {
@@ -42,9 +43,39 @@ const WebCamera = forwardRef<WebCameraRef, WebCameraProps>(({
         setIsCameraError(true);
     }, []);
 
+    // Update device dimensions on mount and resize
+    useEffect(() => {
+        const updateDimensions = () => {
+            if (typeof window !== 'undefined') {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                const aspectRatio = width / height;
+                
+                setDeviceDimensions({
+                    width,
+                    height,
+                    aspectRatio
+                });
+            }
+        };
+
+        // Initial dimensions
+        updateDimensions();
+
+        // Listen for resize events
+        window.addEventListener('resize', updateDimensions);
+        window.addEventListener('orientationchange', updateDimensions);
+
+        return () => {
+            window.removeEventListener('resize', updateDimensions);
+            window.removeEventListener('orientationchange', updateDimensions);
+        };
+    }, []);
+
     const videoConstraints = {
-        width: { ideal: width },
-        height: { ideal: height },
+        width: { ideal: deviceDimensions.width },
+        height: { ideal: deviceDimensions.height },
+        aspectRatio: deviceDimensions.aspectRatio,
         facingMode: "environment" // Use back camera on mobile by default
     };
 
@@ -60,7 +91,8 @@ const WebCamera = forwardRef<WebCameraRef, WebCameraProps>(({
                 onUserMediaError={handleUserMediaError}
                 className="w-full h-full object-cover rounded-lg"
                 style={{
-                    display: isCameraError ? 'none' : 'block'
+                    display: isCameraError ? 'none' : 'block',
+                    aspectRatio: deviceDimensions.aspectRatio
                 }}
             />
 

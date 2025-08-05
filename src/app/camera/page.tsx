@@ -56,14 +56,14 @@ export default function CameraPage() {
                 <Menu collapse={false} />
             </div>
             {/* Camera Content */}
-            <div className="flex-1 flex flex-col items-center justify-center p-4">
-                <div className="w-full max-w-4xl">
-                    <WebCamera
-                        ref={webcamRef}
-                        width={1280}
-                        height={720}
-                        className="w-full h-[75vh] sm:h-[80vh]"
-                    />
+            <div className="flex-1 flex flex-col items-center md:justify-start md:mt-8 justify-center p-4">
+                <div className="w-full max-w-4xl flex justify-center items-center">
+                    <div className="w-full max-h-[70vh] sm:max-h-[75vh] flex justify-center">
+                        <WebCamera
+                            ref={webcamRef}
+                            className="w-full h-auto max-w-full max-h-full rounded-lg"
+                        />
+                    </div>
                 </div>
                 
                 {/* Instructions */}
