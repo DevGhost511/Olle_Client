@@ -1,31 +1,36 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import Webcam from "react-webcam";
 
 interface WebCameraProps {
-  onCapture?: (imageSrc: string) => void;
-  width?: number;
-  height?: number;
   className?: string;
 }
 
-export default function WebCamera({ 
-  onCapture, 
-  width = 640, 
-  height = 480, 
+export interface WebCameraRef {
+  capture: () => string | null;
+}
+
+const WebCamera = forwardRef<WebCameraRef, WebCameraProps>(({ 
   className = "" 
-}: WebCameraProps) {
+}, ref) => {
     const webcamRef = useRef<Webcam>(null);
     const [isCameraLoading, setIsCameraLoading] = useState(true);
     const [isCameraError, setIsCameraError] = useState(false);
+    const [deviceDimensions, setDeviceDimensions] = useState({
+        width: 1920,
+        height: 1080,
+        aspectRatio: 16/9
+    });
 
     const capture = useCallback(() => {
         if (webcamRef.current) {
-            const imageSrc = webcamRef.current.getScreenshot();
-            if (imageSrc && onCapture) {
-                onCapture(imageSrc);
-            }
+            return webcamRef.current.getScreenshot();
         }
-    }, [onCapture]);
+        return null;
+    }, []);
+
+    useImperativeHandle(ref, () => ({
+        capture
+    }), [capture]);
 
     const handleUserMedia = useCallback(() => {
         setIsCameraLoading(false);
@@ -38,9 +43,39 @@ export default function WebCamera({
         setIsCameraError(true);
     }, []);
 
+    // Update device dimensions on mount and resize
+    useEffect(() => {
+        const updateDimensions = () => {
+            if (typeof window !== 'undefined') {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                const aspectRatio = width / height;
+                
+                setDeviceDimensions({
+                    width,
+                    height,
+                    aspectRatio
+                });
+            }
+        };
+
+        // Initial dimensions
+        updateDimensions();
+
+        // Listen for resize events
+        window.addEventListener('resize', updateDimensions);
+        window.addEventListener('orientationchange', updateDimensions);
+
+        return () => {
+            window.removeEventListener('resize', updateDimensions);
+            window.removeEventListener('orientationchange', updateDimensions);
+        };
+    }, []);
+
     const videoConstraints = {
-        width: { ideal: width },
-        height: { ideal: height },
+        width: { ideal: deviceDimensions.width },
+        height: { ideal: deviceDimensions.height },
+        aspectRatio: deviceDimensions.aspectRatio,
         facingMode: "environment" // Use back camera on mobile by default
     };
 
@@ -56,7 +91,8 @@ export default function WebCamera({
                 onUserMediaError={handleUserMediaError}
                 className="w-full h-full object-cover rounded-lg"
                 style={{
-                    display: isCameraError ? 'none' : 'block'
+                    display: isCameraError ? 'none' : 'block',
+                    aspectRatio: deviceDimensions.aspectRatio
                 }}
             />
 
@@ -88,17 +124,11 @@ export default function WebCamera({
                 </div>
             )}
 
-            {/* Capture button - only show if onCapture is provided and camera is working */}
-            {onCapture && !isCameraLoading && !isCameraError && (
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                    <button
-                        onClick={capture}
-                        className="bg-white hover:bg-gray-100 text-gray-800 font-medium py-2 px-6 rounded-full shadow-lg transition-all duration-200 hover:scale-105"
-                    >
-                        📸 Capture
-                    </button>
-                </div>
-            )}
+
         </div>
     );
-}
+});
+
+WebCamera.displayName = 'WebCamera';
+
+export default WebCamera;
