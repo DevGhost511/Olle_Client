@@ -1,31 +1,35 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import Webcam from "react-webcam";
 
 interface WebCameraProps {
-  onCapture?: (imageSrc: string) => void;
   width?: number;
   height?: number;
   className?: string;
 }
 
-export default function WebCamera({ 
-  onCapture, 
+export interface WebCameraRef {
+  capture: () => string | null;
+}
+
+const WebCamera = forwardRef<WebCameraRef, WebCameraProps>(({ 
   width = 640, 
   height = 480, 
   className = "" 
-}: WebCameraProps) {
+}, ref) => {
     const webcamRef = useRef<Webcam>(null);
     const [isCameraLoading, setIsCameraLoading] = useState(true);
     const [isCameraError, setIsCameraError] = useState(false);
 
     const capture = useCallback(() => {
         if (webcamRef.current) {
-            const imageSrc = webcamRef.current.getScreenshot();
-            if (imageSrc && onCapture) {
-                onCapture(imageSrc);
-            }
+            return webcamRef.current.getScreenshot();
         }
-    }, [onCapture]);
+        return null;
+    }, []);
+
+    useImperativeHandle(ref, () => ({
+        capture
+    }), [capture]);
 
     const handleUserMedia = useCallback(() => {
         setIsCameraLoading(false);
@@ -88,17 +92,11 @@ export default function WebCamera({
                 </div>
             )}
 
-            {/* Capture button - only show if onCapture is provided and camera is working */}
-            {onCapture && !isCameraLoading && !isCameraError && (
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                    <button
-                        onClick={capture}
-                        className="bg-white hover:bg-gray-100 text-gray-800 font-medium py-2 px-6 rounded-full shadow-lg transition-all duration-200 hover:scale-105"
-                    >
-                        📸 Capture
-                    </button>
-                </div>
-            )}
+
         </div>
     );
-}
+});
+
+WebCamera.displayName = 'WebCamera';
+
+export default WebCamera;
