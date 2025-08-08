@@ -5,15 +5,20 @@ type Props = {
     placeholder?: string;
     onChange?: (value: string) => void;
     type?: string;
+    value?: string;
 }
-export default function Input( {type, placeholder, onChange} : Props) {
+export default function Input( {type, placeholder, onChange, value} : Props) {
 
     const [visible, setVisible] = useState(type === "password" ? false : true);
     const toggleVisible = () => { setVisible(!visible) };
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {  
+        onChange?.(e.target.value);
+    }
+
     return (
         <div className="flex flex-row items-center justify-center gap-4 w-full  border-1 border-(--brand-3) [&:has(input:focus)]:border-(--brand-6) [&:has(input:focus)]:outline-4 [&:has(input:focus)]:outline-(--brand-3) rounded-xl py-2 px-4">
-            <input type={visible ? "text" : "password"} placeholder={placeholder} className="outline-none font-Geist text-(--black-5) placeholder:text-(--black-4) font-medium text-md text-left w-full " />
+            <input type={visible ? "text" : "password"} placeholder={placeholder} value={value} onChange={handleChange} className="outline-none font-Geist text-(--black-5) placeholder:text-(--black-4) ring-0 outline-none border-none font-medium text-md text-left w-full " />
             {type === "password" && (
                 visible ? (
                 <button className="cursor-pointer" onClick={toggleVisible}>
