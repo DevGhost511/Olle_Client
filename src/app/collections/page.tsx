@@ -4,6 +4,7 @@ import CollectionCard from "@/components/CollectionCard";
 import Tab from "@/components/Tab";
 import { useState, useEffect } from "react";
 import Snap from "@/components/Snap";
+import ProtectPage from "@/components/ProtectPage";
 
 const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
 
@@ -20,9 +21,10 @@ export default function Dashboard() {
 
 
     return (
-        <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
-            <div className="flex flex-row justify-between items-center px-4 sm:px-0">
-                <Menu collapse={false} />
+        <ProtectPage>
+            <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
+                <div className="flex flex-row justify-between items-center px-4 sm:px-0">
+                    <Menu collapse={false} />
             </div>
 
             <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
@@ -61,7 +63,8 @@ export default function Dashboard() {
             </div>
             <div className="w-full px-4 sm:px-20 lg:px-40  pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
                 <Snap onChange={handleSetPrompt} />
+                </div>
             </div>
-        </div>
+        </ProtectPage>
     )
 }

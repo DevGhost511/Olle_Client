@@ -5,15 +5,20 @@ import SecButton from "@/components/SecButton";
 import { useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const OTPVerify = () => {
     const router = useRouter()
     const [otp, setOtp] = useState("");
     const [email, setEmail] = useState("");
     const handleVerify = async () => {
-        const response = await verifyOtp(email, otp)
-        if (response.status === 200) {
-            router.push("/signin")
+        try{
+            await verifyOtp(email, otp)
+            router.push("/login")
+            toast.success("Email verified")
+        }
+        catch(error: any){
+            toast.error(error.response.data.message)
         }
     }
     const handleResend = async () => {
@@ -55,8 +60,6 @@ const OTPVerify = () => {
                 <p className="font-Geist text-(--black-5) font-medium text-md text-center">Didn't receive the code? <a className="text-(--brand-6) font-bold" onClick={handleResend} >Resend</a></p>
                 <SecButton text="Verify" onClick={handleVerify} />
             </div>
-
-
         </div>
     )
 }

@@ -26,7 +26,7 @@ function LoginForm() {
             const response = await signIn(email, password)
             localStorage.setItem("token", response.token)
             toast.success("Login successful")
-            router.push("/")
+            router.push("/collections")
         } catch (error: any) {
             toast.error(error.message)
         }
