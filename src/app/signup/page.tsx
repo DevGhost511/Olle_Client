@@ -24,10 +24,13 @@ function SignUpForm() {
     }
 
     const handleSignUpClick = async () => {
-        const response = await signUp(email, password)
-        if(response.status === 201){
+        try{
+            await signUp(email, password)
             await sendOtp(email)
             router.push(`/otp-verify?email=${email}`)
+        }
+        catch(error: any){
+            toast.error(error.response.data.message)
         }
     }
 
