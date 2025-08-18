@@ -13,6 +13,7 @@ import { toast } from "react-hot-toast"
 function SignUpForm() {
     const [isChecked, setIsChecked] = useState(false);
     const [email, setEmail] = useState("")
+    const [error, setError] = useState("")
     const [password, setPassword] = useState("")
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
@@ -30,7 +31,12 @@ function SignUpForm() {
             router.push(`/otp-verify?email=${email}`)
         }
         catch(error: any){
-            toast.error(error.response.data.message)
+            if(error.response.data.message === "User already exists"){
+                setError("User already exists, please <a href='/login' className='text-blue-500 cursor-pointer text-decoration-underline'>login</a>")
+            }   
+            else{
+                setError(error.response.data.message)
+            }
         }
     }
 
@@ -47,7 +53,12 @@ function SignUpForm() {
            }
            catch(error: any){
             console.log('Google signup failed', error)
-            toast.error(error.response.data.message)
+            if(error.response.data.message === "User already exists"){
+                setError("User already exists, please <a href='/login' className='text-blue-500 cursor-pointer text-decoration-underline'>login</a>")
+            }
+            else{
+                setError(error.response.data.message)
+            }
            }
         },
         onError: () => {
@@ -71,7 +82,7 @@ function SignUpForm() {
                     <div className="w-full flex flex-col gap-4">
                         <Input type="email" value={email} onChange={(e) => setEmail(e)} placeholder="Enter Your Email" />
                         <Input type="password" value={password} onChange={(e) => setPassword(e)} placeholder="Enter Your Password" />
-
+                        {error && <div className="text-red-500 text-md" dangerouslySetInnerHTML={{ __html: error }}></div>}
                     </div>
 
                     <div className="flex flex-col justify-between items-center gap-4 w-full">

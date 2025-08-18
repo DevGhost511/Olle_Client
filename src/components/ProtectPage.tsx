@@ -1,3 +1,4 @@
+'use client'
 import { useRouter } from "next/navigation"
 import { jwtDecode } from "jwt-decode"
 import { useEffect, useState } from "react"

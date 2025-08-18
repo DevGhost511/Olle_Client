@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type MenuProps = {
@@ -10,12 +10,22 @@ type MenuProps = {
 export default function Menu({ collapse }: MenuProps) {
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const router = useRouter();
-  
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setIsLoggedIn(false)
+    }
+    else {
+      setIsLoggedIn(true)
+    }
+  }, [])
   const handleCollectionsNavigation = () => {
     router.push('/collections');
   };
@@ -31,7 +41,10 @@ export default function Menu({ collapse }: MenuProps) {
   const handleAddnewNavigation = () => {
     router.push('/');
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/');
+  };
   return (
     <div className="flex flex-row items-center justify-between relative w-full">
 
@@ -48,36 +61,42 @@ export default function Menu({ collapse }: MenuProps) {
 
       {isMenuOpen && (
         <div className="absolute flex flex-col justify-center items-center top-16 left-0 gap-1 px-1 py-1 bg-white z-50 border-1 border-(--brand-3) rounded-xl sm:w-54 w-full">
-          <div className="sm:hidden w-full border-(--brand-3) border-b justify-center items-center flex flex-col gap-4 py-4">
+          {/* <div className="sm:hidden w-full border-(--brand-3) border-b justify-center items-center flex flex-col gap-4 py-4">
             <img src="/Logo/mini_logo.svg" alt="mini_logo" />
             <p className="font-Geist text-(--brand-6) font-medium text-md text-center">
               Hi, I am Olle - Your Collectible Expert.
             </p>
-          </div>
-          <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
-            onClick={() => { toggleMenu(), handleCollectionsNavigation() }}>
-              <img src="/menu_icons/items.svg" alt="items" />
-            <p className="flex text-center sm:text-left">Collections</p>
-          </button>
-          <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
-            onClick={() => { toggleMenu(), handleWishlistNavigation() }}>
-              <img src="/menu_icons/wishlist.svg" alt="wishlist" />
-            <p className="flex text-center sm:text-left">Wishlist</p>
-          </button>
-          <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
-            onClick={() => { toggleMenu(), handleInboxNavigation() }}>
-              <img src="/menu_icons/notification.svg" alt="notification" />
-            <p className="flex text-center sm:text-left">Message Inbox</p>
-          </button>
+          </div> */}
+          {isLoggedIn && (
+            <>
+              <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+                onClick={() => { toggleMenu(), handleCollectionsNavigation() }}>
+                <img src="/menu_icons/items.svg" className="w-6 h-6" alt="items" />
+                <p className="flex text-center sm:text-left">Collections</p>
+              </button>
+              <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+                onClick={() => { toggleMenu(), handleWishlistNavigation() }}>
+                <img src="/menu_icons/wishlist.svg" className="w-6 h-6" alt="wishlist" />
+                <p className="flex text-center sm:text-left">Wishlist</p>
+              </button>
+              <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+                onClick={() => { toggleMenu(), handleInboxNavigation() }}>
+                <img src="/menu_icons/notification.svg" className="w-6 h-6" alt="notification" />
+                <p className="flex text-center sm:text-left">Message Inbox</p>
+              </button>
+              {/* Logout Button */}
+              <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+                onClick={() => { toggleMenu(), handleLogout() }}>
+                <img src="/menu_icons/logout.svg" className="w-6 h-6" alt="logout" />
+                <p className="flex text-center sm:text-left">Logout</p>
+              </button>
+            </>
+          )}
           <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
             onClick={() => { toggleMenu(), handleHelpNavigation() }}>
-              <img src="/menu_icons/help.svg" alt="items" />
+            <img src="/menu_icons/help.svg" alt="items" />
             <p className="flex text-center sm:text-left">Help</p>
           </button>
-
-
-
-
         </div>
       )}
 

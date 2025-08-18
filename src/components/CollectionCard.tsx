@@ -4,13 +4,14 @@ type Props = {
     name: string,
     image: string,
     price: number,
-    className?: string
+    className?: string,
+    onClick?: () => void
 }
 
-export default function CollectionCard({ name, image, price, className }: Props) {
+export default function CollectionCard({ name, image, price, className, onClick }: Props) {
     return (
         <div className={`flex flex-col items-center justify-center gap-2 ${className}`} >
-            <div className="w-full border-1 rounded-xl border-(--brand-3)">
+            <div className="w-full border-1 rounded-xl border-(--brand-3) cursor-pointer" onClick={onClick}>
                 <img src={image} className="w-full rounded-xl h-48 object-cover" alt="collection" />
             </div>
             <p className="font-Geist text-(--black-5) font-medium text-md text-left w-full">

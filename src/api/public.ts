@@ -61,4 +61,11 @@ export const olleAIChatStream = (threadId: string | null, prompt: string, onMess
     return eventSource;
 };
 
-
+export const getChats = async (threadId: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chats/${threadId}`);
+    if (response.status === 200) {
+        return response.data;
+    } else {
+        throw new Error(response.data.message);
+    }
+}
