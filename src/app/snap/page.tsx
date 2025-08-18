@@ -11,55 +11,7 @@ import { useRouter } from "next/navigation"
 import ReactMarkdown from 'react-markdown';
 import Tab from "@/components/Tab"
 import { getChats } from "@/api/public"
-
-const ImageIdentifyPrompt =
-  `Analyze this image to identify if it contains a collectible item from these categories: Car, Watch, or Art. 
-
-        If a collectible is found, provide:
-        - name: Detailed model/title including brand and specific model
-        - rarerate: Rarity score from 1 (common) to 5 (extremely rare)
-        - price: Array of 10 estimated market values in USD (6-month intervals from 2020 to now)
-        - description: One paragraph including production date, origin, and key details
-
-        If no collectible is identified, return: {"message": "No collectible found"}
-
-        Response format (JSON only, no additional text):
-        {
-          "name": "string",
-          "rarerate": number,
-          "category": "string", // Car, Watch, Art
-          "price": [number array],
-          "description": "string",
-          "categories": [
-            {
-              "name": "string",
-              "value": "string"
-            }
-          ]
-        }
-          For Car, the categories are:
-          - Production Years(example: 2018~2019)
-          - Transmission
-          - Engine(displacement + type)
-          - Body Style
-          - Drive
-          - Mileage(exact if known)
-          - Colour(factory name/custom)
-          - Key options/packages(example: Weissach, PCCB, Clubsport, etc.)
-          - Number of owners(exact if known)
-          - Service History Summary(exact if known)
-          For Watch, the categories are:
-          - Brand & Model(example: Rolex Daytona)
-          - Reference Number(example: 116500LN)
-          - Year/Production Year(example: 1962)
-          - Case Size & Material(example: 40mm, Stainless Steel, Gold, etc.)
-          - Dial Colour(example: Black, Blue, etc.)
-          - Movement caliber & type(example: Automatic, Quartz, etc.)
-          - Bracelet/strap type(example: Stainless Steel, Gold, etc.)
-          - Papers/Box(yes/no)
-          - Condition grading(example: 95/100)
-          - Service History Summary(exact if known)
-        `
+  
 const tabNames = ["OVERVIEW", "SPEC"];
 
 export default function Page() {
@@ -158,7 +110,7 @@ export default function Page() {
     }
     olleAIChatStream(
       threadId, // Use the threadId from state
-      `${determined !== 1 ? "Image information identified is not correct. Please let us know what you think." : ""} Please respond in natural, conversational text format. Do not use JSON or structured data format. Just provide helpful - User: ${prompt}`,
+      prompt,
       (chunk) => {
         if (!receivedFirstChunk) {
           setChattingLoading(false);
@@ -254,7 +206,7 @@ export default function Page() {
     setImage(process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl);
     setIsLoading(true);
 
-    imageIdentify(null, ImageIdentifyPrompt, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+    imageIdentify(null, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
     // imageIdentify(null, ImageIdentifyPrompt, "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
       .then(res => {
         setThreadId(res.threadId);

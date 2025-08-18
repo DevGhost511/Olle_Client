@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { removeAuthToken } from "@/utils";
 
 type MenuProps = {
   collapse: boolean;
@@ -18,12 +19,38 @@ export default function Menu({ collapse }: MenuProps) {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      setIsLoggedIn(false)
+    // Check initial login status
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        setIsLoggedIn(false)
+      }
+      else {
+        setIsLoggedIn(true)
+      }
     }
-    else {
-      setIsLoggedIn(true)
+    
+    checkLoginStatus()
+    
+    // Listen for storage changes (when localStorage is modified)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token') {
+        checkLoginStatus()
+      }
+    }
+    
+    // Listen for custom events (for same-tab changes)
+    const handleAuthChange = () => {
+      checkLoginStatus()
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('authChange', handleAuthChange)
+    
+    // Cleanup listeners
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('authChange', handleAuthChange)
     }
   }, [])
   const handleCollectionsNavigation = () => {
@@ -42,7 +69,7 @@ export default function Menu({ collapse }: MenuProps) {
     router.push('/');
   };
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    removeAuthToken();
     router.push('/');
   };
   const handleLogin = () => {
