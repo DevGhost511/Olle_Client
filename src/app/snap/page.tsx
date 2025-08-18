@@ -10,6 +10,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { useRouter } from "next/navigation"
 import ReactMarkdown from 'react-markdown';
 import Tab from "@/components/Tab"
+import { getChats } from "@/api/public"
 
 const ImageIdentifyPrompt =
   `Analyze this image to identify if it contains a collectible item from these categories: Car, Watch, or Art. 
@@ -183,10 +184,25 @@ export default function Page() {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
       const imageUrl = localStorage.getItem('imageUrl');
-      if (imageUrl) {
+      const collectionInfo = JSON.parse(localStorage.getItem('collectionInfo') || '{}');
+      if (imageUrl && imageUrl != collectionInfo.imageUrl) {
         processImageIdentification(imageUrl);
+      }
+      if (imageUrl && imageUrl == collectionInfo.imageUrl) {
+        setCollectionName(collectionInfo.name);
+        setCollectionCategory(collectionInfo.category);
+        setCollectionPrice(collectionInfo.price);
+        setCollectionRareRate(collectionInfo.rarerate);
+        setCollectionDescription(collectionInfo.description);
+        setCollectionCategories(collectionInfo.categories);
+        setThreadId(collectionInfo.threadId);
+        setDetermined(parseInt(localStorage.getItem("determined") || "-1") as -1 | 0 | 1);
+        setImage(process.env.NEXT_PUBLIC_API_URL + '/' + collectionInfo.imageUrl);
+        const chats = await getChats(collectionInfo.threadId)
+        setChats(chats.reverse().slice(2).map((chat: any) => ({ role: chat.role, content: chat.content[0].text.value.replace(" Please respond in natural, conversational text format. Do not use JSON or structured data format. Just provide helpful - User: ", "") })));
+        setIsLoading(false);
       }
     }, 1000)
   }, [])
@@ -219,6 +235,7 @@ export default function Page() {
   const [determined, setDetermined] = useState<-1 | 0 | 1>(-1);
   const handleDetermine = (status: -1 | 0 | 1) => {
     setDetermined(status);
+    localStorage.setItem("determined", status.toString());
   };
 
   const resetImageState = () => {
@@ -249,6 +266,17 @@ export default function Page() {
           setCollectionRareRate(obj.rarerate);
           setCollectionDescription(obj.description);
           setCollectionCategories(obj.categories);
+          localStorage.setItem("collectionInfo", JSON.stringify({
+            name: obj.name,
+            category: obj.category,
+            price: obj.price,
+            rarerate: obj.rarerate,
+            description: obj.description,
+            categories: obj.categories,
+            imageUrl: imageUrl,
+            threadId: res.threadId,
+          }));
+          localStorage.setItem("determined", determined.toString());
         } catch (err) {
           console.error(err);
           setCollectionName("No collection");
@@ -270,14 +298,7 @@ export default function Page() {
 
   const handleAddCollection = () => {
     // Store collection info in local storage
-    localStorage.setItem("collectionInfo", JSON.stringify({
-      name: collectionName,
-      category: collectionCategory,
-      price: collectionPrice,
-      rarerate: collectionRareRate,
-      description: collectionDescription,
-      categories: collectionCategories,
-    }));
+    localStorage.setItem('draft', "0");
     router.push("/collections/add?threadId=" + threadId);
   }
 
@@ -286,7 +307,7 @@ export default function Page() {
       <div className="w-full px-4 sm:px-0">
         <Menu collapse={false} />
       </div>
-      {!isLoading && determined !== 0 && (
+      {!isLoading && determined == 1 && (
         <>
           <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
             <p className="sm:px-10 md:px-20 lg:px-40 font-abril-fatface w-fit text-(--black-5) font-semiblod text-2xl text-center">
@@ -322,7 +343,6 @@ export default function Page() {
 
         </div>
       )}
-
 
       <div className="flex flex-1 flex-col w-full overflow-auto">
         {isLoading ? (<div className="flex flex-col flex-1 w-full">

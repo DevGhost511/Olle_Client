@@ -45,6 +45,9 @@ export default function Menu({ collapse }: MenuProps) {
     localStorage.removeItem('token');
     router.push('/');
   };
+  const handleLogin = () => {
+    router.push('/login');
+  };
   return (
     <div className="flex flex-row items-center justify-between relative w-full">
 
@@ -91,6 +94,13 @@ export default function Menu({ collapse }: MenuProps) {
                 <p className="flex text-center sm:text-left">Logout</p>
               </button>
             </>
+          )}
+          {!isLoggedIn && (
+            <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
+              onClick={() => { toggleMenu(), handleLogin() }}>
+              <img src="/menu_icons/login.svg" className="w-6 h-6" alt="login" />
+              <p className="flex text-center sm:text-left">Login</p>
+            </button>
           )}
           <button className="flex flex-row gap-4 items-center justify-start  rounded-md cursor-pointer text-(--black-5) font-Geist font-medium text-md w-full border-0 px-4 py-2 hover:bg-[#EFECE0]"
             onClick={() => { toggleMenu(), handleHelpNavigation() }}>

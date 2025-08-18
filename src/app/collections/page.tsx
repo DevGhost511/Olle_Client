@@ -7,7 +7,7 @@ import { ICollection } from "@/types/collection";
 import { getCollections } from "@/api/private";
 import { useRouter } from "next/navigation";
 
-const tabNames = ["Car", "Watch", "Art"];
+const tabNames = ["All", "Car", "Watch"];
 
 export default function Dashboard() {
     const [collections, setCollections] = useState<ICollection[]>([]);
@@ -16,10 +16,14 @@ export default function Dashboard() {
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
     };
-    
+
     // Calculate category counts
     const categoryCounts = tabNames.reduce((counts, tabName) => {
-        counts[tabName] = collections.filter(collection => collection.category === tabName).length;
+        if (tabName === "All") {
+            counts[tabName] = collections.length;
+        } else {
+            counts[tabName] = collections.filter(collection => collection.category === tabName).length;
+        }
         return counts;
     }, {} as { [key: string]: number });
     const [prompt, setPrompt] = useState<string>("");
@@ -39,7 +43,7 @@ export default function Dashboard() {
     }, []);
     return (
 
-        <div className="w-full">
+        <div className="w-full flex flex-1 flex-col overflow-auto gap-4 px-4 sm:px-10 md:px-20 lg:px-40">
             <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
                 <p className="text-xl text-(--black-5) font-abril-fatface ">My Collections</p>
                 <div className="flex flex-col justify-center items-center gap-1">
@@ -58,6 +62,11 @@ export default function Dashboard() {
                 <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" containerClassName="justify-start items-center gap-4 w-fit" badgeCounts={categoryCounts} />
             </div>
             <div className="flex flex-1 flex-col w-full justify-start overflow-auto gap-6 px-4 sm:px-0">
+                {activeTab === "All" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
+                    {collections.map((collection) => (
+                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
+                    ))}
+                </div>)}
 
                 {activeTab === "Car" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
                     {collections.filter((collection) => collection.category === "Car").map((collection) => (
@@ -66,11 +75,6 @@ export default function Dashboard() {
                 </div>)}
                 {activeTab === "Watch" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
                     {collections.filter((collection) => collection.category === "Watch").map((collection) => (
-                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
-                    ))}
-                </div>)}
-                {activeTab === "Art" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
-                    {collections.filter((collection) => collection.category === "Art").map((collection) => (
                         <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
                     ))}
                 </div>)}
