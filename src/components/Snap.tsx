@@ -130,7 +130,7 @@ export default function Snap({ onChange, onImageUpload, isDisabled }: Props) {
                         {isUploading ? (
                             <div className="w-6 h-6 sm:w-7 sm:h-7 animate-spin rounded-full border-2 border-(--brand-6) border-t-transparent"></div>
                         ) : (
-                            <img className="w-6 h-6 sm:w-7 sm:h-7" src="plus.svg" alt="Upload image" />
+                            <img className="w-6 h-6 sm:w-7 sm:h-7" src="/plus.svg" alt="Upload image" />
                         )}
                     </button>
 
@@ -187,14 +187,14 @@ export default function Snap({ onChange, onImageUpload, isDisabled }: Props) {
                         className="flex rounded-lg px-2 py-2 cursor-pointer hover:bg-(--brand-2) disabled:opacity-50 disabled:cursor-not-allowed transition-opacity min-w-[44px] min-h-[44px] items-center justify-center"
                         title="Send message"
                     >
-                        <img className="w-6 h-6 sm:w-7 sm:h-7" src="send.svg" alt="Send" />
+                        <img className="w-6 h-6 sm:w-7 sm:h-7" src="/send.svg" alt="Send" />
                     </button>
                     <button
                         disabled={isDisabled}
                         onClick={handleOpenCamera}
                         className="flex rounded-lg px-2 py-2 cursor-pointer hover:bg-(--brand-2) disabled:opacity-50 disabled:cursor-not-allowed min-w-[44px] min-h-[44px] items-center justify-center"
                     >
-                        <img className="w-6 h-6 sm:w-7 sm:h-7" src="camera.svg" alt="Camera" />
+                        <img className="w-6 h-6 sm:w-7 sm:h-7" src="/camera.svg" alt="Camera" />
                     </button>
                 </div>
             </div>

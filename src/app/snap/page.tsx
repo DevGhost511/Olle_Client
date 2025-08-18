@@ -9,6 +9,8 @@ import { imageIdentify, olleAIChatStream } from "@/api/public"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useRouter } from "next/navigation"
 import ReactMarkdown from 'react-markdown';
+import Tab from "@/components/Tab"
+
 const ImageIdentifyPrompt =
   `Analyze this image to identify if it contains a collectible item from these categories: Car, Watch, or Art. 
 
@@ -24,9 +26,41 @@ const ImageIdentifyPrompt =
         {
           "name": "string",
           "rarerate": number,
+          "category": "string", // Car, Watch, Art
           "price": [number array],
-          "description": "string"
-        }`
+          "description": "string",
+          "categories": [
+            {
+              "name": "string",
+              "value": "string"
+            }
+          ]
+        }
+          For Car, the categories are:
+          - Production Years(example: 2018~2019)
+          - Transmission
+          - Engine(displacement + type)
+          - Body Style
+          - Drive
+          - Mileage(exact if known)
+          - Colour(factory name/custom)
+          - Key options/packages(example: Weissach, PCCB, Clubsport, etc.)
+          - Number of owners(exact if known)
+          - Service History Summary(exact if known)
+          For Watch, the categories are:
+          - Brand & Model(example: Rolex Daytona)
+          - Reference Number(example: 116500LN)
+          - Year/Production Year(example: 1962)
+          - Case Size & Material(example: 40mm, Stainless Steel, Gold, etc.)
+          - Dial Colour(example: Black, Blue, etc.)
+          - Movement caliber & type(example: Automatic, Quartz, etc.)
+          - Bracelet/strap type(example: Stainless Steel, Gold, etc.)
+          - Papers/Box(yes/no)
+          - Condition grading(example: 95/100)
+          - Service History Summary(exact if known)
+        `
+const tabNames = ["OVERVIEW", "SPEC"];
+
 export default function Page() {
 
   const router = useRouter();
@@ -42,9 +76,12 @@ export default function Page() {
   const [chattingLoading, setChattingLoading] = useState<boolean>(false);
   const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
+  const [collectionCategory, setCollectionCategory] = useState<string>("");
   const [collectionPrice, setCollectionPrice] = useState<number[]>([]);
   const [collectionRareRate, setCollectionRareRate] = useState<number>(0);
   const [collectionDescription, setCollectionDescription] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<string>("OVERVIEW");
+  const [collectionCategories, setCollectionCategories] = useState<{ name: string, value: string }[]>([]);
   // Add threadId state
   const [threadId, setThreadId] = useState<string | null>(null);
 
@@ -188,6 +225,7 @@ export default function Page() {
     setThreadId(null);
     setChats([]);
     setCollectionName("");
+    setCollectionCategory("");
     setCollectionPrice([]);
     setCollectionRareRate(0);
     setCollectionDescription("");
@@ -200,14 +238,17 @@ export default function Page() {
     setIsLoading(true);
 
     imageIdentify(null, ImageIdentifyPrompt, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
+    // imageIdentify(null, ImageIdentifyPrompt, "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
       .then(res => {
         setThreadId(res.threadId);
         try {
           const obj = res.reply;
           setCollectionName(obj.name);
+          setCollectionCategory(obj.category);
           setCollectionPrice(obj.price);
           setCollectionRareRate(obj.rarerate);
           setCollectionDescription(obj.description);
+          setCollectionCategories(obj.categories);
         } catch (err) {
           console.error(err);
           setCollectionName("No collection");
@@ -223,17 +264,41 @@ export default function Page() {
       });
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
+
+  const handleAddCollection = () => {
+    // Store collection info in local storage
+    localStorage.setItem("collectionInfo", JSON.stringify({
+      name: collectionName,
+      category: collectionCategory,
+      price: collectionPrice,
+      rarerate: collectionRareRate,
+      description: collectionDescription,
+      categories: collectionCategories,
+    }));
+    router.push("/collections/add?threadId=" + threadId);
+  }
+
   return (
     <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-4 sm:py-12 sm:px-12  mx-auto">
       <div className="w-full px-4 sm:px-0">
         <Menu collapse={false} />
       </div>
       {!isLoading && determined !== 0 && (
-        <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
-          <p className="sm:px-10 md:px-20 lg:px-40 font-abril-fatface w-fit text-(--black-5) font-semiblod text-2xl text-center">
-            {collectionName}
-          </p>
-        </div>
+        <>
+          <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
+            <p className="sm:px-10 md:px-20 lg:px-40 font-abril-fatface w-fit text-(--black-5) font-semiblod text-2xl text-center">
+              {collectionName}
+            </p>
+
+          </div>
+          <div className="flex flex-col justify-start items-start w-full sm:px-10 md:px-20 lg:px-40 px-4">
+            <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4 " containerClassName="w-full justify-start items-center gap-4" />
+          </div>
+        </>
+
       )}
 
       {showScrollButtons && !isLoading && (
@@ -270,14 +335,13 @@ export default function Page() {
           </div>
         </div>) : (
           (<div ref={containerRef} className="flex flex-col flex-1 overflow-auto w-full">
-
             <div className={`sm:px-10 md:px-20 lg:px-40 flex flex-col ${determined && `flex-1`} rounded-2xl items-center justify-start gap-3 px-4 w-full`}>
               <div className="w-full flex flex-col flex-1 overflow-auto gap-4 ">
                 <div className={`w-full flex flex-col ${determined === 0 && `flex-1 overflow-auto`} gap-4`}>
                   {determined !== 0 && (
                     <img src={image} alt="Snap Image" className="rounded-xl w-full sm:w-full sm:h-80 h-80 object-cover border-1 border-(--brand-3)" />
                   )}
-                  {determined !== 0 && (
+                  {determined !== 0 && activeTab === "OVERVIEW" && (
                     <p className="text-md text-(--black-4)">
                       {collectionDescription}
                     </p>
@@ -301,54 +365,89 @@ export default function Page() {
                 ) : (
                   determined !== 0 && (
                     <div className="flex flex-col gap-6">
-                      <div className="flex sm:flex-row flex-col justify-center items-center gap-6 sm:gap-12 ">
-                        <div className="flex sm:flex-col flex-row w-full sm:w-1/3 lg:w-1/4 justify-between items-start gap-6">
-                          <Valuation value={collectionPrice[0]} />
-                          <RareRate rarerate={collectionRareRate} iconsize={"w-7 h-7"} />
+                      {activeTab === "OVERVIEW" && (
+                        <>
+                          <div className="flex sm:flex-row flex-col justify-center items-center gap-6 sm:gap-12 ">
+                            <div className="flex sm:flex-col flex-row w-full sm:w-1/3 lg:w-1/4 justify-between items-start gap-6">
+                              <Valuation value={collectionPrice[0]} />
+                              <RareRate rarerate={collectionRareRate} iconsize={"w-7 h-7"} />
+                            </div>
+                            <div className="flex h-40 sm:h-40 w-full">
+                              <ResponsiveContainer className="w-full flex items-start sm:items-start justify-start">
+                                <BarChart
+                                  data={chartData}
+                                  margin={{
+                                    top: 0,
+                                    right: 24,
+                                    left: 8,
+                                    bottom: 0,
+                                  }}
+                                >
+                                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                                  <XAxis
+                                    dataKey="period"
+                                    tick={{ fontSize: 14 }}
+                                    textAnchor="end"
+                                    height={24}
+                                    angle={0}
+                                  />
+                                  <YAxis
+                                    domain={[0, yAxisMax]}
+                                    tick={{ fontSize: 14 }}
+                                    tickFormatter={(value) => `$${value.toLocaleString()}`}
+                                  />
+                                  <Tooltip
+                                    formatter={(value: number) => [`$${value.toLocaleString()}`, 'Price']}
+                                    labelStyle={{ color: '#333' }}
+                                    contentStyle={{
+                                      backgroundColor: '#fff',
+                                      border: '1px solid #ccc',
+                                      borderRadius: '8px'
+                                    }}
+                                  />
+                                  <Bar
+                                    dataKey="price"
+                                    fill="var(--brand-5, #80725E)"
+                                    radius={[2, 2, 0, 0]}
+                                  />
+                                </BarChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-0">
+                            {collectionCategories.slice(0, 5).map((category, index) => (
+                              <div key={index} className={`flex flex-row justify-between items-center p-2 rounded-lg ${index % 2 === 0 ? 'bg-[#EFECE0]' : ''}`}>
+                                <div className="flex-1 flex flex-row justify-start items-center gap-2">
+                                  <p className="text-sm text-(--black-5) font-normal">{category.name}</p>
+                                </div>
+                                <div className="flex-1 flex flex-row items-center gap-2">
+                                  <p className="text-sm text-(--black-5) font-normal">{category.value}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                      {activeTab === "SPEC" && (
+                        <div className="flex flex-col gap-4">
+                          <div className="flex flex-row w-full justify-between gap-6">
+                            <Valuation value={collectionPrice[0]} />
+                            <RareRate rarerate={collectionRareRate} iconsize={"w-7 h-7"} />
+                          </div>
+                          <div className="flex flex-col">
+                            {collectionCategories.map((category, index) => (
+                              <div key={index} className={`flex flex-row justify-between items-center p-2 rounded-lg ${index % 2 === 0 ? 'bg-[#EFECE0]' : ''}`}>
+                                <div className="flex-1 flex flex-row justify-start items-center gap-2">
+                                  <p className="text-sm text-(--black-5) font-normal">{category.name}</p>
+                                </div>
+                                <div className="flex-1 flex flex-row items-center gap-2">
+                                  <p className="text-sm text-(--black-5) font-normal">{category.value}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex h-40 sm:h-40 w-full">
-                          <ResponsiveContainer className="w-full flex items-start sm:items-start justify-start">
-                            <BarChart
-                              data={chartData}
-                              margin={{
-                                top: 0,
-                                right: 24,
-                                left: 8,
-                                bottom: 0,
-                              }}
-                            >
-                              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                              <XAxis
-                                dataKey="period"
-                                tick={{ fontSize: 14 }}
-                                textAnchor="end"
-                                height={24}
-                                angle={0}
-                              />
-                              <YAxis
-                                domain={[0, yAxisMax]}
-                                tick={{ fontSize: 14 }}
-                                tickFormatter={(value) => `$${value.toLocaleString()}`}
-                              />
-                              <Tooltip
-                                formatter={(value: number) => [`$${value.toLocaleString()}`, 'Price']}
-                                labelStyle={{ color: '#333' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '1px solid #ccc',
-                                  borderRadius: '8px'
-                                }}
-                              />
-                              <Bar
-                                dataKey="price"
-                                fill="var(--brand-5, #80725E)"
-                                radius={[2, 2, 0, 0]}
-                              />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-
-                      </div>
+                      )}
                     </div>
                   )
 
@@ -399,7 +498,7 @@ export default function Page() {
         {determined !== -1 && (
           <div className="flex flex-row p-4 gap-3 w-full sm:px-10 md:px-20 lg:px-40">
             <div className="flex flex-row justify-center w-full items-center gap-3">
-              <SecButton text="Add to Collection" onClick={handleSignupNavication} />
+              <SecButton text="Add to Collection" onClick={handleAddCollection} />
               <SecButton text="Add to Wishlist" onClick={handleSignupNavication} />
             </div>
           </div>

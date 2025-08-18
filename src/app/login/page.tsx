@@ -7,28 +7,27 @@ import SecButton from "@/components/SecButton"
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { toast } from "react-hot-toast"
 
 function LoginForm() {
 
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
     const handleSignupClick = () => {
         router.push("/signup")
     }
     const handleLoginClick = async () => {
         if (!email || !password) {
-            toast.error("Please enter your email and password")
+            setError("Please enter your email and password")
             return
         }
         try {
             const response = await signIn(email, password)
             localStorage.setItem("token", response.token)
-            toast.success("Login successful")
             router.push("/collections")
         } catch (error: any) {
-            toast.error(error.message)
+            setError(error.response.data.message)
         }
     }
     const googleLogin = useGoogleLogin({
@@ -38,12 +37,11 @@ function LoginForm() {
             try {
                 const googleResponse = await googleSignIn(response.access_token)
                 localStorage.setItem('token', googleResponse.token)
-                toast.success("Login successful")
                 router.push('/collections')
             }
             catch (error: any) {
                 console.log('Google login failed', error)
-                toast.error(error.response.data.message)
+                setError(error.response.data.message)
             }
         },
         onError: () => {
@@ -66,6 +64,7 @@ function LoginForm() {
                     <div className="w-full flex flex-col gap-4">
                         <Input type="email" placeholder="Enter Your Email" value={email} onChange={(e) => setEmail(e)} />
                         <Input type="password" placeholder="Enter Your Password" value={password} onChange={(e) => setPassword(e)} />
+                        {error && <div className="text-red-500 text-md " dangerouslySetInnerHTML={{ __html: error }}></div>}
                     </div>
                     <div className="flex flex-col w-full items-center justify-center gap-4">
                         <PriButton onClick={handleLoginClick} text="Login" />
