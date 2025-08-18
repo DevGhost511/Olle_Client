@@ -9,6 +9,7 @@ import { googleSignUp, signUp } from "@/api/auth"
 import { sendOtp } from "@/api/otp"
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google"
 import { toast } from "react-hot-toast"
+import { setAuthToken } from "@/utils"
 
 function SignUpForm() {
     const [isChecked, setIsChecked] = useState(false);
@@ -47,7 +48,7 @@ function SignUpForm() {
            
            try{
             const googleResponse = await googleSignUp(response.access_token)
-            localStorage.setItem('token', googleResponse.token)
+            setAuthToken(googleResponse.token);
             toast.success("Signup successful")
             router.push('/collections')
            }

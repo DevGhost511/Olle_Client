@@ -7,6 +7,7 @@ import SecButton from "@/components/SecButton"
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { setAuthToken } from "@/utils"
 
 function LoginForm() {
 
@@ -24,7 +25,7 @@ function LoginForm() {
         }
         try {
             const response = await signIn(email, password)
-            localStorage.setItem("token", response.token)
+            setAuthToken(response.token);
             if (localStorage.getItem('draft') == "0") {
                 router.push('/collections/add?threadId=' + localStorage.getItem('threadId'))
             } else {
@@ -40,7 +41,7 @@ function LoginForm() {
             console.log(response.credential)
             try {
                 const googleResponse = await googleSignIn(response.access_token)
-                localStorage.setItem('token', googleResponse.token)
+                setAuthToken(googleResponse.token);
                 if (localStorage.getItem('draft') == "0") {
                     router.push('/collections/add?threadId=' + localStorage.getItem('threadId'))
                 } else {

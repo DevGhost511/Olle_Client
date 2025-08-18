@@ -11,11 +11,10 @@ export const fileUpload = async (file: File) => {
     return res.data;
 }
 
-export const imageIdentify = async (threadId: string | null, prompt: string, image_url: string) => {
+export const imageIdentify = async (threadId: string | null, image_url: string) => {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/image-identify`, {
         threadId,
         image_url,
-        prompt
     });
     return res.data;
 }

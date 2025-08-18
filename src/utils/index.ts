@@ -57,3 +57,16 @@ export const compressImage = async (file: File): Promise<File> => {
         img.src = URL.createObjectURL(file);
     });
 };
+
+// Auth utility functions
+export const setAuthToken = (token: string) => {
+    localStorage.setItem('token', token);
+    // Dispatch custom event to update menu immediately
+    window.dispatchEvent(new Event('authChange'));
+};
+
+export const removeAuthToken = () => {
+    localStorage.removeItem('token');
+    // Dispatch custom event to update menu immediately
+    window.dispatchEvent(new Event('authChange'));
+};
