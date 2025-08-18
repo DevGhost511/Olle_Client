@@ -61,17 +61,17 @@ export default function Dashboard() {
 
                 {activeTab === "Car" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
                     {collections.filter((collection) => collection.category === "Car").map((collection) => (
-                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
+                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
                     ))}
                 </div>)}
                 {activeTab === "Watch" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
                     {collections.filter((collection) => collection.category === "Watch").map((collection) => (
-                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
+                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
                     ))}
                 </div>)}
                 {activeTab === "Art" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
                     {collections.filter((collection) => collection.category === "Art").map((collection) => (
-                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
+                        <CollectionCard key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
                     ))}
                 </div>)}
             </div>
