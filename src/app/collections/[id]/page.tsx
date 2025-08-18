@@ -1,7 +1,7 @@
 'use client'
 import { ICollection } from "@/types/collection";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getCollection } from "@/api/private";
 import Image from "next/image";
 import Snap from "@/components/Snap";
@@ -24,6 +24,8 @@ const CollectionDetail = () => {
     const [chats, setChats] = useState<{ role: 'user' | 'olleAI' | 'assistant', content: string }[]>([]);
     const [chartData, setChartData] = useState<{ period: string, price: number }[]>([]);
     const [yAxisMax, setYAxisMax] = useState<number>(0);
+    const [canScrollDown, setCanScrollDown] = useState(false);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         const fetchCollection = async (): Promise<ICollection | null> => {
             try {
@@ -94,20 +96,66 @@ const CollectionDetail = () => {
     const handleIsStartChatting = () => {
         setIsStartChatting(true);
     }
+
+    // Scroll detection and functionality
+    const handleScroll = () => {
+        if (chatContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+            // Show button when not at the bottom (more than 100px from bottom)
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+            setCanScrollDown(!isNearBottom);
+        }
+    };
+
+    const scrollToBottom = () => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTo({
+                top: chatContainerRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+    // Add scroll listener
+    useEffect(() => {
+        const chatContainer = chatContainerRef.current;
+        if (chatContainer) {
+            chatContainer.addEventListener('scroll', handleScroll);
+            return () => chatContainer.removeEventListener('scroll', handleScroll);
+        }
+    }, []);
+
+    // Auto-scroll to bottom when new messages are added
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 200;
+            
+            // Only auto-scroll if user is already near the bottom
+            if (isNearBottom) {
+                setTimeout(() => {
+                    scrollToBottom();
+                }, 100);
+            }
+        }
+    }, [chats]);
     return (
         <div className="flex flex-col flex-1 overflow-y-auto justify-center items-center gap-4 w-full ">
-            <div className="flex flex-row w-full justify-center relative items-center py-8 px-4 sm:px-10 md:px-20 lg:px-40">
+            <div className="flex flex-row w-full justify-center relative items-center py-8 px-4 sm:px-10 md:px-20 lg:px-40 gap-4">
                 <Image src={"/arrow.svg"} alt="arrow" width={24} height={24} className="cursor-pointer absolute top-[50%] left-4 sm:left-10 md:left-20 lg:left-40 translate-y-[-50%]" onClick={() => router.back()} />
                 <div className="flex flex-col justify-center items-center gap-4 w-full px-4 sm:px-10 md:px-20 lg:px-40">
                     <p className="text-2xl font-bold text-center"><span className="text-(--brand-5)">My Collections/</span>{collection?.name}</p>
                 </div>
             </div>
-            <div className="flex flex-col justify-start items-start w-full px-4 sm:px-10 md:px-20 lg:px-40">
-                <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4 " containerClassName="w-full justify-start items-center gap-4" />
+            <div className="flex flex-row w-full justify-center relative items-center py-8 px-4 sm:px-10 md:px-20 lg:px-40">
+                <img src={process.env.NEXT_PUBLIC_API_URL + '/' + collection?.imageURL} alt="collection" className="w-full h-48 object-cover rounded-xl" />
             </div>
+            <div className="flex flex-col justify-start items-start w-full px-4 sm:px-10 md:px-20 lg:px-40">
+            <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4 " containerClassName="w-full justify-start items-center gap-4" />
+          </div>
             {/* Chat message */}
             <div className="flex flex-col flex-1 overflow-y-auto w-full gap-4 px-4 sm:px-10 md:px-20 lg:px-40">
-                <div className="flex flex-col flex-1 overflow-y-auto">
+                <div className="flex flex-col flex-1 overflow-y-auto" ref={chatContainerRef}>
                     <div className="flex flex-col gap-6">
                         {activeTab === "OVERVIEW" && (
                             <>
@@ -187,10 +235,10 @@ const CollectionDetail = () => {
                                             <div className="flex-1 flex flex-row items-center gap-2">
                                                 <p className="text-sm text-(--black-5) font-normal">{category.value}</p>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
                         )}
                     </div>
                     <div className="flex flex-col w-full gap-2">
@@ -225,6 +273,26 @@ const CollectionDetail = () => {
             {/* Chat input */}
             <div className="w-full px-4 sm:px-10 md:px-20 lg:px-40 mt-4 pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
                 <Snap onChange={handleSetPrompt} />
+            </div>
+
+            {/* Floating scroll to bottom button */}
+            <div className={`sm:hidden fixed right-4 bottom-24 flex flex-col gap-2 z-50`}>
+                {canScrollDown && (
+                    <button
+                        onClick={scrollToBottom}
+                        className="w-12 h-12 bg-white cursor-pointer border-1 border-(--brand-6) rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 shadow-lg"
+                        aria-label="Scroll to latest message"
+                    >
+                        <svg
+                            className="w-5 h-5 text-(--brand-6)"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                )}
             </div>
         </div>
     )

@@ -25,7 +25,11 @@ function LoginForm() {
         try {
             const response = await signIn(email, password)
             localStorage.setItem("token", response.token)
-            router.push("/collections")
+            if (localStorage.getItem('draft') == "0") {
+                router.push('/collections/add?threadId=' + localStorage.getItem('threadId'))
+            } else {
+                router.push('/collections')
+            }
         } catch (error: any) {
             setError(error.response.data.message)
         }
@@ -37,7 +41,11 @@ function LoginForm() {
             try {
                 const googleResponse = await googleSignIn(response.access_token)
                 localStorage.setItem('token', googleResponse.token)
-                router.push('/collections')
+                if (localStorage.getItem('draft') == "0") {
+                    router.push('/collections/add?threadId=' + localStorage.getItem('threadId'))
+                } else {
+                    router.push('/collections')
+                }
             }
             catch (error: any) {
                 console.log('Google login failed', error)

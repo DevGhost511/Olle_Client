@@ -49,6 +49,7 @@ const AddCollection = () => {
                 price: collectionInfo?.price,
                 rarerate: collectionInfo?.rarerate,
             });
+            localStorage.removeItem("draft");
             router.push("/collections");
         } catch (error) {
             console.log(error);
@@ -57,6 +58,7 @@ const AddCollection = () => {
         }
     }
     const handleCancel = () => {
+        localStorage.removeItem("draft");
         router.push("/collections");
     }
     useEffect(() => {
@@ -75,17 +77,17 @@ const AddCollection = () => {
         }
     }, [query]);
     return (
-        <div className="w-full">
-            <div className="text-center">
-                <p className="text-xl text-(--black-5) font-abril-fatface py-[67px]">Add Collection</p>
+        <div className="w-full flex flex-1 flex-col overflow-auto gap-4 px-4 sm:px-10 md:px-20 lg:px-40">
+            <div className="flex flex-col justify-center items-center text-center pt-8 pb-4 flex-shrink-0">
+                <p className="text-xl text-(--black-5) font-abril-fatface ">Add Collection</p>
             </div>
-            <div className="flex md:flex-row flex-col gap-6 font-[Geist] pb-8">
+            <div className="flex md:flex-row flex-col gap-6 font-[Geist] pb-8 flex-1 overflow-auto min-h-0">
                 {/* Image */}
-                <div className="flex-1 rounded-lg overflow-hidden h-[fit-content]">
+                <div className="flex-1 rounded-lg overflow-auto min-h-0 h-[fit-content]">
                     <Image src="/Assets/car.jpg" alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" />
                 </div>
                 {/* Form */}
-                <div className="flex-[2] flex flex-col gap-6">
+                <div className="flex-[2] flex flex-col gap-6 overflow-y-auto min-h-0">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm text-(--black-5) font-medium">Collection Name</p>
                         <input type="text" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, name: e.target.value })} value={collectionInfo?.name || ''} />
@@ -117,11 +119,12 @@ const AddCollection = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="flex flex-row justify-between items-center gap-3">
-                        <SecButton text="Cancel" onClick={handleCancel} />
-                        <PriButton text="Add Collection" onClick={handleAddCollection} disabled={loading} />
-                    </div>
+
                 </div>
+            </div>
+            <div className="flex flex-row justify-between items-center gap-3 flex-shrink-0">
+                <SecButton text="Cancel" onClick={handleCancel} />
+                <PriButton text="Add Collection" onClick={handleAddCollection} disabled={loading} />
             </div>
         </div>
     )
