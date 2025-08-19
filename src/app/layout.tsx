@@ -45,6 +45,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${abrilFatface.variable} antialiased`}
         style={{ backgroundColor: "#F9F9F5" }}
+        id="root"
       >
         <Toaster position="top-right" />
         {children}
