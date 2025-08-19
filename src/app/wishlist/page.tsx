@@ -38,6 +38,7 @@ export default function Page() {
     }
     fetchWishLists();
   }, []);
+  
   return (
     <>
       <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
