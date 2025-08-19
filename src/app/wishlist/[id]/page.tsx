@@ -174,13 +174,13 @@ const DetailWishList = () => {
     }, [wishList]);
     return (
         <div className="flex flex-col flex-1 overflow-y-auto justify-center items-center gap-4 w-full ">
-            <div className="flex flex-row w-full justify-center relative items-center py-8 px-4 sm:px-10 md:px-20 lg:px-40 gap-4">
+            <div className="flex flex-row w-full justify-center relative items-center py-4 px-4 sm:px-10 md:px-20 lg:px-40 gap-4">
                 <Image src={"/arrow.svg"} alt="arrow" width={24} height={24} className="cursor-pointer absolute top-[50%] left-4 sm:left-10 md:left-20 lg:left-40 translate-y-[-50%]" onClick={() => router.back()} />
                 <div className="flex flex-col justify-center items-center gap-4 w-full px-4 sm:px-10 md:px-20 lg:px-40">
-                    <p className="text-2xl font-bold text-center"><span className="text-(--brand-5)">My WishList/</span>{wishList?.name}</p>
+                    <p className="md:text-2xl text-xl font-bold text-center font-abril-fatface"><span className="text-(--brand-5)">My WishList/</span>{wishList?.name}</p>
                 </div>
             </div>
-            <div className="flex flex-row w-full justify-center relative items-center py-8 px-4 sm:px-10 md:px-20 lg:px-40">
+            <div className="flex flex-row w-full justify-center relative items-center px-4 sm:px-10 md:px-20 lg:px-40">
                 <img src={process.env.NEXT_PUBLIC_API_URL + '/' + wishList?.imageURL} alt="collection" className="w-full h-48 object-cover rounded-xl" />
             </div>
             <div className="flex flex-col justify-start items-start w-full px-4 sm:px-10 md:px-20 lg:px-40">
