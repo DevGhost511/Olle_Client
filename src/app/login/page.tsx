@@ -26,8 +26,11 @@ function LoginForm() {
         try {
             const response = await signIn(email, password)
             setAuthToken(response.token);
-            if (localStorage.getItem('draft') == "0") {
-                router.push('/collections/add?threadId=' + localStorage.getItem('threadId'))
+            const collection = JSON.parse(localStorage.getItem('collection') || '{}');
+            if (localStorage.getItem('addCollectionDraft') == "0" && collection?.threadId) {
+                router.push('/collections/add?threadId=' + collection?.threadId)
+            } else if (localStorage.getItem('addWishListDraft') == "0" && collection?.threadId) {
+                router.push('/wishlist/add?threadId=' + collection?.threadId)
             } else {
                 router.push('/collections')
             }
@@ -42,8 +45,11 @@ function LoginForm() {
             try {
                 const googleResponse = await googleSignIn(response.access_token)
                 setAuthToken(googleResponse.token);
-                if (localStorage.getItem('draft') == "0") {
-                    router.push('/collections/add?threadId=' + localStorage.getItem('threadId'))
+                const collection = JSON.parse(localStorage.getItem('collection') || '{}');
+                if (localStorage.getItem('addCollectionDraft') == "0" && collection?.threadId) {
+                    router.push('/collections/add?threadId=' + collection?.threadId)
+                } else if (localStorage.getItem('addWishListDraft') == "0" && collection?.threadId) {
+                    router.push('/wishlist/add?threadId=' + collection?.threadId)
                 } else {
                     router.push('/collections')
                 }

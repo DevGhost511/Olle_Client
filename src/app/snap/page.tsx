@@ -2,7 +2,6 @@
 import Menu from "@/components/Menu"
 import RareRate from "@/components/RareRate"
 import SecButton from "@/components/SecButton"
-import Valuation from "@/components/Valuation"
 import Snap from "@/components/Snap"
 import { useEffect, useState, useRef } from "react"
 import { imageIdentify, olleAIChatStream } from "@/api/public"
@@ -11,7 +10,9 @@ import { useRouter } from "next/navigation"
 import ReactMarkdown from 'react-markdown';
 import Tab from "@/components/Tab"
 import { getChats } from "@/api/public"
-  
+import toast from "react-hot-toast"
+import EstimationValue from "@/components/EstimationValue";
+
 const tabNames = ["OVERVIEW", "SPEC"];
 
 export default function Page() {
@@ -138,7 +139,7 @@ export default function Page() {
   useEffect(() => {
     setTimeout(async () => {
       const imageUrl = localStorage.getItem('imageUrl');
-      const collectionInfo = JSON.parse(localStorage.getItem('collectionInfo') || '{}');
+      const collectionInfo = JSON.parse(localStorage.getItem('collection') || '{}');
       if (imageUrl && imageUrl != collectionInfo.imageUrl) {
         processImageIdentification(imageUrl);
       }
@@ -150,10 +151,11 @@ export default function Page() {
         setCollectionDescription(collectionInfo.description);
         setCollectionCategories(collectionInfo.categories);
         setThreadId(collectionInfo.threadId);
+        setIsStartChatting(true);
         setDetermined(parseInt(localStorage.getItem("determined") || "-1") as -1 | 0 | 1);
         setImage(process.env.NEXT_PUBLIC_API_URL + '/' + collectionInfo.imageUrl);
         const chats = await getChats(collectionInfo.threadId)
-        setChats(chats.reverse().slice(2).map((chat: any) => ({ role: chat.role, content: chat.content[0].text.value.replace(" Please respond in natural, conversational text format. Do not use JSON or structured data format. Just provide helpful - User: ", "") })));
+        setChats(chats);
         setIsLoading(false);
       }
     }, 1000)
@@ -207,7 +209,7 @@ export default function Page() {
     setIsLoading(true);
 
     imageIdentify(null, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
-    // imageIdentify(null, ImageIdentifyPrompt, "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
+    // imageIdentify(null, "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
       .then(res => {
         setThreadId(res.threadId);
         try {
@@ -218,7 +220,7 @@ export default function Page() {
           setCollectionRareRate(obj.rarerate);
           setCollectionDescription(obj.description);
           setCollectionCategories(obj.categories);
-          localStorage.setItem("collectionInfo", JSON.stringify({
+          localStorage.setItem("collection", JSON.stringify({
             name: obj.name,
             category: obj.category,
             price: obj.price,
@@ -231,15 +233,13 @@ export default function Page() {
           localStorage.setItem("determined", determined.toString());
         } catch (err) {
           console.error(err);
-          setCollectionName("No collection");
-          setCollectionPrice([]);
-          setCollectionRareRate(0);
-          setCollectionDescription("");
+          resetImageState();
         }
         setIsLoading(false);
       })
       .catch(err => {
         console.error(err);
+        resetImageState();
         setIsLoading(false);
       });
   };
@@ -250,8 +250,23 @@ export default function Page() {
 
   const handleAddCollection = () => {
     // Store collection info in local storage
-    localStorage.setItem('draft', "0");
-    router.push("/collections/add?threadId=" + threadId);
+    localStorage.setItem('addCollectionDraft', "0");
+    if (threadId) {
+      router.push("/collections/add?threadId=" + threadId);
+    }
+    else {
+      toast.error("Please analyze an image first.");
+    }
+  }
+
+  const handleAddWishList = () => {
+    localStorage.setItem('addWishListDraft', "0");
+    if (threadId) {
+      router.push("/wishlist/add?threadId=" + threadId);
+    }
+    else {
+      toast.error("Please analyze an image first.");
+    }
   }
 
   return (
@@ -259,14 +274,15 @@ export default function Page() {
       <div className="w-full px-4 sm:px-0">
         <Menu collapse={false} />
       </div>
+      {!isLoading && (
+        <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
+          <p className="sm:px-10 md:px-20 lg:px-40 font-abril-fatface w-fit text-(--black-5) font-semiblod text-2xl text-center">
+            {collectionName}
+          </p>
+        </div>
+      )}
       {!isLoading && determined == 1 && (
         <>
-          <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
-            <p className="sm:px-10 md:px-20 lg:px-40 font-abril-fatface w-fit text-(--black-5) font-semiblod text-2xl text-center">
-              {collectionName}
-            </p>
-
-          </div>
           <div className="flex flex-col justify-start items-start w-full sm:px-10 md:px-20 lg:px-40 px-4">
             <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4 " containerClassName="w-full justify-start items-center gap-4" />
           </div>
@@ -341,7 +357,7 @@ export default function Page() {
                         <>
                           <div className="flex sm:flex-row flex-col justify-center items-center gap-6 sm:gap-12 ">
                             <div className="flex sm:flex-col flex-row w-full sm:w-1/3 lg:w-1/4 justify-between items-start gap-6">
-                              <Valuation value={collectionPrice[0]} />
+                              <EstimationValue value={collectionPrice[0]} />
                               <RareRate rarerate={collectionRareRate} iconsize={"w-7 h-7"} />
                             </div>
                             <div className="flex h-40 sm:h-40 w-full">
@@ -403,7 +419,7 @@ export default function Page() {
                       {activeTab === "SPEC" && (
                         <div className="flex flex-col gap-4">
                           <div className="flex flex-row w-full justify-between gap-6">
-                            <Valuation value={collectionPrice[0]} />
+                            <EstimationValue value={collectionPrice[0]} />
                             <RareRate rarerate={collectionRareRate} iconsize={"w-7 h-7"} />
                           </div>
                           <div className="flex flex-col">
@@ -471,7 +487,7 @@ export default function Page() {
           <div className="flex flex-row p-4 gap-3 w-full sm:px-10 md:px-20 lg:px-40">
             <div className="flex flex-row justify-center w-full items-center gap-3">
               <SecButton text="Add to Collection" onClick={handleAddCollection} />
-              <SecButton text="Add to Wishlist" onClick={handleSignupNavication} />
+              <SecButton text="Add to Wishlist" onClick={handleAddWishList} />
             </div>
           </div>
         )}

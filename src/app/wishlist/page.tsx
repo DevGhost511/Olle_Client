@@ -1,104 +1,75 @@
 'use client'
-import Menu from "@/components/Menu";
-import CollectionCard from "@/components/CollectionCard";
 import Tab from "@/components/Tab";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Snap from "@/components/Snap";
 import WishlistCard from "@/components/WishlistCard";
-import { olleAIChatStream } from "@/api/public";
+import { IWishList } from "@/types/wishList";
+import { getWishLists } from "@/api/private";
+import { useRouter } from "next/navigation";
 
-const tabNames = ["Cars (3)", "Watches (3)", "Arts (2)"];
+const tabNames = ["All", "Car", "Watch"];
 
 export default function Page() {
-
-      const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
-        const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
+  const router = useRouter();
 
 
-      const handleChats = (chat: { role: string, content: string }) => {
-    setChats(prev => [...prev, chat]);
+  const [activeTab, setActiveTab] = useState(tabNames[0]);
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
   };
-      const [chattingLoading, setChattingLoading] = useState<boolean>(false);
+  const [wishLists, setWishLists] = useState<IWishList[]>([]);
+  const categoryCounts = tabNames.reduce((counts, tabName) => {
+    if (tabName === "All") {
+      counts[tabName] = wishLists.length;
+    } else {
+      counts[tabName] = wishLists.filter(wishList => wishList.category === tabName).length;
+    }
+    return counts;
+  }, {} as { [key: string]: number });
 
-
-        const handleIsStartChatting = () => {
-    setIsStartChatting(true);
-  }
-
-  const handleSetPrompt = (prompt: string) => {
-    setChattingLoading(true);
-    handleChats({ role: 'user', content: prompt });
-    handleIsStartChatting();
-
-    let fullMessage = '';
-    let receivedFirstChunk = false;
-    olleAIChatStream(
-      "thread_FTxK3PYZBFrW9A3dR6EkPXN3",
-      prompt,
-      (chunk) => {
-        if (!receivedFirstChunk) {
-          setChattingLoading(false);
-          receivedFirstChunk = true;
-        }
-        fullMessage += chunk;
-        setChats(prev => {
-          if (prev.length && prev[prev.length - 1].role === 'olleAI') {
-            return [
-              ...prev.slice(0, -1),
-              { role: 'olleAI', content: fullMessage }
-            ];
-          } else {
-            return [...prev, { role: 'olleAI', content: fullMessage }];
-          }
-        });
-      },
-      () => {}, // onStatus no-op
-      () => {
-        setChattingLoading(false);
+  useEffect(() => {
+    const fetchWishLists = async () => {
+      try {
+        const wishLists = await getWishLists();
+        setWishLists(wishLists);
+      } catch (error) {
+        console.error('Error fetching wishlists:', error);
       }
-    );
-  };
-
-    const [activeTab, setActiveTab] = useState(tabNames[0]);
-    const handleTabChange = (tab: string) => {
-        setActiveTab(tab);
-    };
-
-    return (
-        <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
-            <div className="flex flex-row justify-between items-center px-4 sm:px-0">
-                <Menu collapse={false} />
-            </div>
-
-            <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
-                <p className="text-xl text-(--black-5) font-abril-fatface ">My Wishlist</p>
-                <div className="flex flex-col justify-center items-center gap-1">
-
-                </div>
-            </div>
-            <div className="flex flex-col justify-start items-start w-full px-4 sm:px-0">
-                <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" />
-            </div>
-            <div className="flex flex-1 flex-col w-full justify-start overflow-auto gap-6 px-4 sm:px-0">
-
-                {activeTab === "Cars (3)" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
-                    <WishlistCard name="1967 Ferrari 275 GTB/4" price={1256400} image="Assets/car.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                    <WishlistCard name="1967  GTB/4" price={1122500} image="Assets/car1.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                    <WishlistCard name="1967 Ferrari 275 " price={12432500} image="Assets/car2.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                </div>)}
-                {activeTab === "Watches (3)" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
-                    <WishlistCard name="1967 Ferrari 275 GTB/4" price={1256400} image="Assets/watch1.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                    <WishlistCard name="1967  GTB/4" price={1122500} image="Assets/watch2.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                    <WishlistCard name="1967 Ferrari 275 " price={12432500} image="Assets/watch3.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                </div>)}
-                {activeTab === "Arts (2)" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
-                    <WishlistCard name="1967 Ferrari 275 GTB/4" price={1256400} image="Assets/arts1.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                    <WishlistCard name="1967  GTB/4" price={1122500} image="Assets/arts2.jpg" className="w-full sm:w-[45%] md:w-[32%]" />
-                </div>)}
-            </div>
-            <div className="w-full px-4 sm:px-20 lg:px-40  pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-                <Snap onChange={handleSetPrompt} />
-            </div>
+    }
+    fetchWishLists();
+  }, []);
+  return (
+    <>
+      <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
+        <p className="text-xl text-(--black-5) font-abril-fatface ">My Wishlist</p>
+        <div className="flex flex-col justify-center items-center gap-1">
         </div>
-    )
+      </div>
+      <div className="flex flex-col justify-start items-start w-full px-4 sm:px-0">
+        <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" containerClassName="justify-start items-center gap-4 w-fit" badgeCounts={categoryCounts} />
+      </div>
+      <div className="flex flex-1 flex-col w-full justify-start overflow-auto gap-6 px-4 sm:px-0">
+
+        {activeTab === "Car" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
+          {wishLists.filter(wishList => wishList.category === "Car").map((wishList) => (
+            <WishlistCard key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
+          ))}
+        </div>)}
+        {activeTab === "Watch" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
+          {wishLists.filter(wishList => wishList.category === "Watch").map((wishList) => (
+            <WishlistCard key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
+          ))}
+        </div>)}
+        {activeTab === "All" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
+          {wishLists.map((wishList) => (
+            <WishlistCard key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
+          ))}
+        </div>)}
+      </div>
+      <div className="w-full px-4 sm:px-20 lg:px-40  pt-4 pb-6 sm:pt-4 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
+        <Snap onChange={() => { }} />
+      </div>
+    </>
+
+  )
 }
