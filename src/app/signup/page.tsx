@@ -50,7 +50,16 @@ function SignUpForm() {
             const googleResponse = await googleSignUp(response.access_token)
             setAuthToken(googleResponse.token);
             toast.success("Signup successful")
-            router.push('/collections')
+            const collection = JSON.parse(localStorage.getItem('collection') || '{}');
+            if (localStorage.getItem('addCollectionDraft') == "0" && collection?.threadId) {
+                router.push('/collections/add?threadId=' + collection?.threadId)
+            }
+            else if (localStorage.getItem('addWishListDraft') == "0" && collection?.threadId) {
+                router.push('/wishlist/add?threadId=' + collection?.threadId)
+            }
+            else {
+                router.push('/collections')
+            }
            }
            catch(error: any){
             console.log('Google signup failed', error)

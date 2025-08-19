@@ -1,0 +1,15 @@
+export interface IWishList {
+    _id: string;
+    name: string;
+    category: string;
+    valuation: number;
+    description: string;
+    imageURL: string;
+    user: string;
+    categories: { name: string, value: string }[];
+    threadId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    price: number[];
+    rarerate: number;
+}

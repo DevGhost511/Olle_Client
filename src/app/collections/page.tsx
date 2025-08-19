@@ -43,7 +43,7 @@ export default function Dashboard() {
     }, []);
     return (
 
-        <div className="w-full flex flex-1 flex-col overflow-auto gap-4 px-4 sm:px-10 md:px-20 lg:px-40">
+        <div className="w-full flex flex-1 flex-col overflow-auto gap-4 pt-2 sm:py-12 sm:px-12 mx-auto">
             <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
                 <p className="text-xl text-(--black-5) font-abril-fatface ">My Collections</p>
                 <div className="flex flex-col justify-center items-center gap-1">
