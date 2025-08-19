@@ -1,9 +1,8 @@
-
-type ValuationProps = {
+type EstimationValueProps = {
     value: number
 }
 
-export default function Valuation ({value} : ValuationProps) {
+export default function EstimationValue ({value} : EstimationValueProps) {
     return (
         <>
             <div className="flex flex-col justify-center items-start gap-2 font-Geist  text-(--black-5)">

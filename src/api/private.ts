@@ -12,6 +12,15 @@ export const addCollection = async (collection: Omit<ICollection, "createdAt" | 
     }
 }
 
+export const deleteCollection = async (id: string) => {
+    const response = await api.delete(`/collections/${id}`);
+    if (response.status === 200) {
+        return response.data;
+    } else {
+        throw new Error(response.data.message);
+    }
+}
+
 export const getCollections = async () => {
     const response = await api.get("/collections");
     if (response.status === 200) {
@@ -49,6 +58,15 @@ export const getWishList = async (id: string) => {
 
 export const getWishLists = async () => {
     const response = await api.get("/wishlists");
+    if (response.status === 200) {
+        return response.data;
+    } else {
+        throw new Error(response.data.message);
+    }
+}
+
+export const deleteWishList = async (id: string) => {
+    const response = await api.delete(`/wishlists/${id}`);
     if (response.status === 200) {
         return response.data;
     } else {

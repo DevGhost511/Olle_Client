@@ -4,14 +4,30 @@ import { useEffect, useState } from "react";
 import Snap from "@/components/Snap";
 import WishlistCard from "@/components/WishlistCard";
 import { IWishList } from "@/types/wishList";
-import { getWishLists } from "@/api/private";
+import { deleteWishList, getWishLists } from "@/api/private";
 import { useRouter } from "next/navigation";
+import Modal from 'react-modal';
 
+Modal.setAppElement('#root');
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+};
 const tabNames = ["All", "Car", "Watch"];
 
 export default function Page() {
   const router = useRouter();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [wishListId, setWishListId] = useState<string>("");
 
   const [activeTab, setActiveTab] = useState(tabNames[0]);
   const handleTabChange = (tab: string) => {
@@ -38,9 +54,29 @@ export default function Page() {
     }
     fetchWishLists();
   }, []);
-  
+  const handleDelete = async () => {
+    try {
+      await deleteWishList(wishListId);
+      setIsModalOpen(false);
+      setWishLists(wishLists.filter((wishList) => wishList._id !== wishListId));
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
+      <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} style={customStyles}>
+        <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
+          <p className="text-xl text-(--black-5) font-abril-fatface ">Delete Wishlist</p>
+          <p className="text-sm text-(--black-5) font-normal">
+            Are you sure you want to delete this wishlist?
+          </p>
+          <div className="flex flex-row justify-center items-center gap-2">
+            <button onClick={handleDelete} className="bg-(--brand-5) text-white px-4 py-2 rounded-md">Delete</button>
+            <button className="bg-white text-(--black-5) px-4 py-2 rounded-md" onClick={() => setIsModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
+      </Modal>
       <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
         <p className="text-xl text-(--black-5) font-abril-fatface ">My Wishlist</p>
         <div className="flex flex-col justify-center items-center gap-1">
@@ -53,17 +89,17 @@ export default function Page() {
 
         {activeTab === "Car" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
           {wishLists.filter(wishList => wishList.category === "Car").map((wishList) => (
-            <WishlistCard key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
+            <WishlistCard onDelete={() => {setIsModalOpen(true); setWishListId(wishList._id)}} key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
           ))}
         </div>)}
         {activeTab === "Watch" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
           {wishLists.filter(wishList => wishList.category === "Watch").map((wishList) => (
-            <WishlistCard key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
+            <WishlistCard onDelete={() => {setIsModalOpen(true); setWishListId(wishList._id)}} key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
           ))}
         </div>)}
         {activeTab === "All" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
           {wishLists.map((wishList) => (
-            <WishlistCard key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
+            <WishlistCard onDelete={() => {setIsModalOpen(true); setWishListId(wishList._id)}} key={wishList._id} name={wishList.name} price={wishList.valuation} image={process.env.NEXT_PUBLIC_API_URL + "/" + wishList.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/wishlist/${wishList._id}`)} />
           ))}
         </div>)}
       </div>
