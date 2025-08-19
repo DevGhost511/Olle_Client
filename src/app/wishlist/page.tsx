@@ -32,8 +32,8 @@ export default function Page() {
       try {
         const wishLists = await getWishLists();
         setWishLists(wishLists);
-      } catch (error) {
-        console.error('Error fetching wishlists:', error);
+      } catch (error: any) {
+        console.error('Error fetching wishlists:', error.response.data.message);
       }
     }
     fetchWishLists();
