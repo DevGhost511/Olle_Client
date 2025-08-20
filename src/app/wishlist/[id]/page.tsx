@@ -194,6 +194,7 @@ const DetailWishList = () => {
                     image.style.opacity = '0';
                     image.style.transform = 'translateY(-20px)';
                     image.style.height = '0';
+                    image.style.display = 'none';
                     image.style.marginBottom = '0';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = true;
@@ -202,6 +203,7 @@ const DetailWishList = () => {
                     image.style.opacity = '1';
                     image.style.transform = 'translateY(0)';
                     image.style.height = '192px'; // h-48 = 12rem = 192px
+                    image.style.display = 'block';
                     image.style.marginBottom = '';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = false;
@@ -224,6 +226,7 @@ const DetailWishList = () => {
                         image.style.opacity = '0';
                         image.style.transform = 'translateY(-20px)';
                         image.style.height = '0';
+                        image.style.display = 'none';
                         image.style.marginBottom = '0';
                         image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                         isImageHidden = true;
@@ -237,6 +240,7 @@ const DetailWishList = () => {
                     image.style.opacity = '1';
                     image.style.transform = 'translateY(0)';
                     image.style.height = '192px'; // h-48 = 12rem = 192px
+                    image.style.display = 'block';
                     image.style.marginBottom = '';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = false;
@@ -265,6 +269,7 @@ const DetailWishList = () => {
                         image.style.opacity = '0';
                         image.style.transform = 'translateY(-20px)';
                         image.style.height = '0';
+                        image.style.display = 'none';
                         image.style.marginBottom = '0';
                         image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                         isImageHidden = true;
@@ -278,6 +283,7 @@ const DetailWishList = () => {
                     image.style.opacity = '1';
                     image.style.transform = 'translateY(0)';
                     image.style.height = '192px'; // h-48 = 12rem = 192px
+                    image.style.display = 'block';
                     image.style.marginBottom = '';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = false;
@@ -304,7 +310,7 @@ const DetailWishList = () => {
             window.removeEventListener('touchend', handleTouchEnd);
         }
     }, []);
-    
+
     return (
         <div className="flex flex-col flex-1 overflow-y-auto justify-center items-center gap-4 w-full ">
             <div className="flex flex-row w-full justify-center relative items-center py-4 px-4 sm:px-10 md:px-20 lg:px-40 gap-4">
@@ -313,8 +319,8 @@ const DetailWishList = () => {
                     <p className="md:text-2xl text-xl font-bold text-center font-abril-fatface"><span className="text-(--brand-5)">My WishList/</span>{wishList?.name}</p>
                 </div>
             </div>
-            <div className="flex flex-row w-full justify-center relative items-center px-4 sm:px-10 md:px-20 lg:px-40">
-                <img ref={imageRef} src={process.env.NEXT_PUBLIC_API_URL + '/' + wishList?.imageURL} alt="collection" className="w-full h-48 object-cover rounded-xl" />
+            <div ref={imageRef} className="flex flex-row w-full justify-center relative items-center px-4 sm:px-10 md:px-20 lg:px-40">
+                <img src={process.env.NEXT_PUBLIC_API_URL + '/' + wishList?.imageURL} alt="collection" className="w-full h-48 object-cover rounded-xl" />
             </div>
             <div className="flex flex-col justify-start items-start w-full px-4 sm:px-10 md:px-20 lg:px-40">
                 <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4 " containerClassName="w-full justify-start items-center gap-4" />
