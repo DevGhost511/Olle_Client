@@ -304,6 +304,7 @@ const DetailWishList = () => {
             window.removeEventListener('touchend', handleTouchEnd);
         }
     }, []);
+    
     return (
         <div className="flex flex-col flex-1 overflow-y-auto justify-center items-center gap-4 w-full ">
             <div className="flex flex-row w-full justify-center relative items-center py-4 px-4 sm:px-10 md:px-20 lg:px-40 gap-4">
