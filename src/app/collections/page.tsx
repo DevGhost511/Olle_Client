@@ -83,17 +83,6 @@ export default function Dashboard() {
             </Modal>
             <div className="flex flex-col justify-center items-center py-2 px-4 sm:py-4 gap-3">
                 <p className="text-xl text-(--black-5) font-abril-fatface ">My Collections</p>
-                <div className="flex flex-col justify-center items-center gap-1">
-                    <p className="text-md text-(--black-5) font-normal">
-                        Total Estimated Value
-                    </p>
-                    <p className="text-2xl text-(--black-5) font-bold">
-                        $12,500
-                    </p>
-                    <p className="text-sm text-(--black-4) font-normal">
-                        +$9,999 Last 1 month
-                    </p>
-                </div>
             </div>
             <div className="flex flex-col justify-start items-start w-full px-4 sm:px-0">
                 <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" containerClassName="justify-start items-center gap-4 w-fit" badgeCounts={categoryCounts} />
