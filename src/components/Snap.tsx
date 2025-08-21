@@ -171,7 +171,7 @@ export default function Snap({ onChange, onImageUpload, isDisabled }: Props) {
                             }
                         }}
                         disabled={isDisabled}
-                        placeholder="Ask about your collectible..."
+                        placeholder="Chat with Olle..."
                         className="outline-none font-Geist text-(--black-5) placeholder:text-(--black-4) font-medium text-base sm:text-lg text-left w-full border-0 resize-none overflow-hidden h-[44px] sm:h-[40px] max-h-[100px] sm:max-h-[120px] px-1 sm:px-0 leading-normal touch-manipulation"
                         style={{
                             fontSize: isMobile ? '16px' : undefined,

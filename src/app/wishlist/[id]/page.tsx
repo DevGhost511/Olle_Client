@@ -119,10 +119,29 @@ const DetailWishList = () => {
             const isNearTop = scrollTop < 200;
             const shouldShowButton = isScrollable && !isNearTop;
 
-            // Debug logging (can be removed in production)
-            // console.log('Scroll Debug:', { scrollTop, shouldShowButton });
-
             setCanScrollDown(shouldShowButton);
+
+            // Handle image visibility based on chat container scroll position
+            const image = imageRef.current;
+            if (image) {
+                if (scrollTop === 0) {
+                    // Chat container is at the very top, show the image
+                    image.style.opacity = '1';
+                    image.style.paddingTop = '24px';
+                    image.style.transform = 'translateY(0)';
+                    image.style.height = '192px'; // h-48 = 12rem = 192px
+                    image.style.marginBottom = '';
+                    image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
+                } else if (scrollTop > 100) {
+                    // Chat container is scrolled down significantly, hide the image
+                    image.style.opacity = '0';
+                    image.style.paddingTop = '0';
+                    image.style.transform = 'translateY(-20px)';
+                    image.style.height = '0';
+                    image.style.marginBottom = '0';
+                    image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
+                }
+            }
         }
     };
 
@@ -180,53 +199,53 @@ const DetailWishList = () => {
         let isImageHidden = false;
         let touchStartY = 0;
         let touchAttempts = 0;
-        
+
         const handleWindowScroll = () => {
             const scrollY = window.scrollY;
             const image = imageRef.current;
-            
+
             if (image) {
                 // Define scroll threshold (adjust as needed)
                 const scrollThreshold = 100;
-                
+
                 if (scrollY > scrollThreshold) {
                     // Fade out the image and collapse space when scrolling down
                     image.style.opacity = '0';
+                    image.style.paddingTop = '0';
                     image.style.transform = 'translateY(-20px)';
                     image.style.height = '0';
-                    image.style.display = 'none';
                     image.style.marginBottom = '0';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = true;
                 } else {
                     // Fade in the image and restore space when scrolling back up
                     image.style.opacity = '1';
+                    image.style.paddingTop = '24px';
                     image.style.transform = 'translateY(0)';
                     image.style.height = '192px'; // h-48 = 12rem = 192px
-                    image.style.display = 'block';
                     image.style.marginBottom = '';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = false;
                 }
             }
         }
-        
+
         // Desktop wheel event handling
         const handleWheel = (e: WheelEvent) => {
             const image = imageRef.current;
             const isScrollable = document.documentElement.scrollHeight > window.innerHeight;
-            
+
             // If window is not scrollable but user tries to scroll down
             if (!isScrollable && e.deltaY > 0 && !isImageHidden) {
                 scrollAttempts++;
-                
+
                 // After 2 scroll attempts, hide the image
                 if (scrollAttempts >= 2) {
                     if (image) {
                         image.style.opacity = '0';
+                        image.style.paddingTop = '0';
                         image.style.transform = 'translateY(-20px)';
                         image.style.height = '0';
-                        image.style.display = 'none';
                         image.style.marginBottom = '0';
                         image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                         isImageHidden = true;
@@ -238,38 +257,38 @@ const DetailWishList = () => {
                 scrollAttempts = 0;
                 if (isImageHidden && image) {
                     image.style.opacity = '1';
+                    image.style.paddingTop = '24px';
                     image.style.transform = 'translateY(0)';
                     image.style.height = '192px'; // h-48 = 12rem = 192px
-                    image.style.display = 'block';
                     image.style.marginBottom = '';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = false;
                 }
             }
         }
-        
+
         // Mobile touch event handling
         const handleTouchStart = (e: TouchEvent) => {
             touchStartY = e.touches[0].clientY;
         }
-        
+
         const handleTouchMove = (e: TouchEvent) => {
             const image = imageRef.current;
             const isScrollable = document.documentElement.scrollHeight > window.innerHeight;
             const currentY = e.touches[0].clientY;
             const deltaY = touchStartY - currentY;
-            
+
             // If window is not scrollable and user swipes down (trying to scroll)
             if (!isScrollable && deltaY > 30 && !isImageHidden) { // 30px threshold for swipe
                 touchAttempts++;
-                
+
                 // After 2 swipe attempts, hide the image
                 if (touchAttempts >= 2) {
                     if (image) {
                         image.style.opacity = '0';
+                        image.style.paddingTop = '0';
                         image.style.transform = 'translateY(-20px)';
                         image.style.height = '0';
-                        image.style.display = 'none';
                         image.style.marginBottom = '0';
                         image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                         isImageHidden = true;
@@ -281,27 +300,27 @@ const DetailWishList = () => {
                 touchAttempts = 0;
                 if (isImageHidden && image) {
                     image.style.opacity = '1';
+                    image.style.paddingTop = '24px';
                     image.style.transform = 'translateY(0)';
                     image.style.height = '192px'; // h-48 = 12rem = 192px
-                    image.style.display = 'block';
                     image.style.marginBottom = '';
                     image.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, height 0.3s ease-out, margin 0.3s ease-out';
                     isImageHidden = false;
                 }
             }
         }
-        
+
         const handleTouchEnd = () => {
             touchStartY = 0;
         }
-        
+
         // Add event listeners for both desktop and mobile
         window.addEventListener('scroll', handleWindowScroll);
         window.addEventListener('wheel', handleWheel, { passive: true });
         window.addEventListener('touchstart', handleTouchStart, { passive: true });
         window.addEventListener('touchmove', handleTouchMove, { passive: true });
         window.addEventListener('touchend', handleTouchEnd, { passive: true });
-        
+
         return () => {
             window.removeEventListener('scroll', handleWindowScroll);
             window.removeEventListener('wheel', handleWheel);
@@ -313,17 +332,19 @@ const DetailWishList = () => {
 
     return (
         <div className="flex flex-col flex-1 overflow-y-auto justify-center items-center gap-4 w-full ">
-            <div className="flex flex-row w-full justify-center relative items-center py-4 px-4 sm:px-10 md:px-20 lg:px-40 gap-4">
-                <Image src={"/arrow.svg"} alt="arrow" width={24} height={24} className="cursor-pointer absolute top-[50%] left-4 sm:left-10 md:left-20 lg:left-40 translate-y-[-50%]" onClick={() => router.back()} />
-                <div className="flex flex-col justify-center items-center gap-4 w-full px-4 sm:px-10 md:px-20 lg:px-40">
-                    <p className="md:text-2xl text-xl font-bold text-center font-abril-fatface"><span className="text-(--brand-5)">My WishList/</span>{wishList?.name}</p>
+            <div className="flex flex-col w-full justify-center items-center py-4 px-4 sm:px-10 md:px-20 lg:px-40">
+                <div className="flex flex-row w-full justify-center items-center relative">
+                    <Image src={"/arrow.svg"} alt="arrow" width={24} height={24} className="cursor-pointer absolute top-[50%] left-0 translate-y-[-50%]" onClick={() => router.push('/wishlist')} />
+                    <div className="flex flex-col justify-center items-center w-full px-4">
+                        <p className="text-xl text-center font-abril-fatface"><span className="text-(--brand-5)">My WishList/</span>{wishList?.name}</p>
+                    </div>
                 </div>
-            </div>
-            <div ref={imageRef} className="flex flex-row w-full justify-center relative items-center px-4 sm:px-10 md:px-20 lg:px-40">
-                <img src={process.env.NEXT_PUBLIC_API_URL + '/' + wishList?.imageURL} alt="collection" className="w-full h-48 object-cover rounded-xl" />
-            </div>
-            <div className="flex flex-col justify-start items-start w-full px-4 sm:px-10 md:px-20 lg:px-40">
-                <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4 " containerClassName="w-full justify-start items-center gap-4" />
+                <div ref={imageRef} className="flex flex-row w-full justify-center relative items-center">
+                    <img src={process.env.NEXT_PUBLIC_API_URL + '/' + wishList?.imageURL} alt="collection" className="w-full h-48 object-cover rounded-xl" />
+                </div>
+                <div className="flex flex-col justify-start items-start w-full">
+                    <Tab onChange={handleTabChange} tabNames={tabNames} className="my-4 " containerClassName="w-full justify-start items-center gap-4" />
+                </div>
             </div>
             {/* Chat message */}
             <div className="flex flex-col flex-1 overflow-y-auto w-full gap-4 px-4 sm:px-10 md:px-20 lg:px-40">
