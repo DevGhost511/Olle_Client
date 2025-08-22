@@ -25,7 +25,7 @@ export const olleAIChatStream = (threadId: string | null, prompt: string, onMess
         onEnd();
         return null;
     }
-    
+
     const url = `${process.env.NEXT_PUBLIC_API_URL}/olle-chat?threadId=${encodeURIComponent(threadId)}&prompt=${encodeURIComponent(prompt)}`;
     const eventSource = new EventSource(url);
 
@@ -67,4 +67,40 @@ export const getChats = async (threadId: string) => {
     } else {
         throw new Error(response.data.message);
     }
+}
+
+export const olleAIChatsStreamWithoutImageAnalysis = (threadId: string | null, prompt: string, onMessage: (msg: string) => void, onStatus: (status: string) => void, onEnd: () => void) => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/olle-chat-without-image-analysis?prompt=${encodeURIComponent(prompt)}${threadId ? `&threadId=${encodeURIComponent(threadId)}` : ''}`;
+    const eventSource = new EventSource(url);
+
+    eventSource.onmessage = (event) => {
+        if (event.data === '[DONE]') {
+            eventSource.close();
+            onEnd();
+        } else {
+            try {
+                const parsed = JSON.parse(event.data);
+                if (parsed.event === "thread.message.in_progress") {
+                    // Assistant is preparing, show loading
+                    onStatus("in_progress");
+                } else if (parsed.event === "thread.message.delta") {
+                    const text = parsed?.data?.delta?.content?.[0]?.text?.value;
+                    if (text) {
+                        onMessage(text);
+                    }
+                }
+            } catch (e) {
+                // Optionally handle parse errors
+                console.error('Failed to parse SSE chunk:', e, event.data);
+            }
+        }
+    };
+
+    eventSource.onerror = () => {
+        eventSource.close();
+        onEnd();
+    };
+
+    return eventSource;
+
 }
