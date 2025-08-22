@@ -42,7 +42,6 @@ export default function Dashboard() {
         }
         return counts;
     }, {} as { [key: string]: number });
-    const [prompt, setPrompt] = useState<string>("");
     const handleSetPrompt = (prompt: string) => {
         router.push(`/chat?prompt=${prompt}`);
     };

@@ -330,19 +330,19 @@ const CollectionDetail = () => {
     }, []);
 
     return (
-        <div className="flex flex-col flex-1 overflow-y-auto justify-center items-center gap-4 w-full ">
+        <div className="flex flex-col flex-1 overflow-y-auto justify-center items-center w-full ">
             <div className="flex flex-col w-full justify-center items-center py-4 px-4 sm:px-10 md:px-20 lg:px-40">
                 <div className="flex flex-row w-full justify-center items-center relative">
                     <Image src={"/arrow.svg"} alt="arrow" width={24} height={24} className="cursor-pointer absolute top-[50%] left-0 translate-y-[-50%]" onClick={() => router.push('/collections')} />
-                    <div className="flex flex-col justify-center items-center w-full px-4">
+                    <div className="flex flex-col justify-center items-center w-full px-8">
                         <p className="text-xl text-center font-abril-fatface"><span className="text-(--brand-5)">My Collections/</span>{collection?.name}</p>
                     </div>
                 </div>
                 <div ref={imageRef} className="flex flex-row w-full justify-center relative items-center">
                     <img src={process.env.NEXT_PUBLIC_API_URL + '/' + collection?.imageURL} alt="collection" className="w-full h-48 object-cover rounded-xl" />
                 </div>
-                <div className="flex flex-col justify-start items-start w-full">
-                    <Tab onChange={handleTabChange} tabNames={tabNames} className="my-4 " containerClassName="w-full justify-start items-center gap-4" />
+                <div className="flex flex-col justify-start items-start w-full mt-4">
+                    <Tab onChange={handleTabChange} tabNames={tabNames} className=" " containerClassName="w-full justify-start items-center gap-4" />
                 </div>
             </div>
             {/* Chat message */}
