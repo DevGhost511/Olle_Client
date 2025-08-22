@@ -44,7 +44,7 @@ export default function Dashboard() {
     }, {} as { [key: string]: number });
     const [prompt, setPrompt] = useState<string>("");
     const handleSetPrompt = (prompt: string) => {
-        setPrompt(prompt);
+        router.push(`/chat?prompt=${prompt}`);
     };
     useEffect(() => {
         const fetchCollections = async () => {
