@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import Menu from "@/components/Menu";
 import Snap from "@/components/Snap";
 import ReactMarkdown from "react-markdown";
@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
-const ChatPage = () => {
+const ChatPageContent = () => {
     const [chats, setChats] = useState<{ role: 'user' | 'olleAI' | 'assistant', content: string }[]>([]);
     const [threadId, setThreadId] = useState<string | null>(null);
     const [chattingLoading, setChattingLoading] = useState(false);
@@ -177,5 +177,13 @@ const ChatPage = () => {
         </div>
     )
 }
+
+const ChatPage = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ChatPageContent />
+        </Suspense>
+    );
+};
 
 export default ChatPage;
