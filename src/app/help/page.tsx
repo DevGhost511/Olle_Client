@@ -3,8 +3,7 @@
 import Menu from "@/components/Menu"
 import HelpCard from "@/components/HelpCard";
 import Snap from "@/components/Snap";
-import { useState } from "react";
-import { imageIdentify, olleAIChatStream } from "@/api/public"
+import { useRouter } from "next/navigation";
 
 
 const FAQ = [
@@ -33,49 +32,9 @@ const FAQ = [
 
 
 export default function Page() {
-    const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
-  const handleIsStartChatting = () => {
-    setIsStartChatting(true);
-  }
-    const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
-
-    const [chattingLoading, setChattingLoading] = useState<boolean>(false);
-
-    const handleChats = (chat: { role: string, content: string }) => {
-        setChats(prev => [...prev, chat]);
-    };
+    const router = useRouter();
     const handleSetPrompt = (prompt: string) => {
-        setChattingLoading(true);
-        handleChats({ role: 'user', content: prompt });
-        handleIsStartChatting();
-
-        let fullMessage = '';
-        let receivedFirstChunk = false;
-        olleAIChatStream(
-            "thread_FTxK3PYZBFrW9A3dR6EkPXN3",
-            prompt,
-            (chunk) => {
-                if (!receivedFirstChunk) {
-                    setChattingLoading(false);
-                    receivedFirstChunk = true;
-                }
-                fullMessage += chunk;
-                setChats(prev => {
-                    if (prev.length && prev[prev.length - 1].role === 'olleAI') {
-                        return [
-                            ...prev.slice(0, -1),
-                            { role: 'olleAI', content: fullMessage }
-                        ];
-                    } else {
-                        return [...prev, { role: 'olleAI', content: fullMessage }];
-                    }
-                });
-            },
-            () => { }, // onStatus no-op
-            () => {
-                setChattingLoading(false);
-            }
-        );
+        router.push(`/chat?prompt=${prompt}`);
     };
     return (
         <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
