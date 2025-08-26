@@ -5,148 +5,105 @@ import Menu from "@/components/Menu"
 import Tab from "@/components/Tab"
 import MessageCard from "@/components/MessageCard"
 import Snap from "@/components/Snap"
-import { imageIdentify, olleAIChatStream } from "@/api/public"
-
+import { useRouter } from "next/navigation";
 
 const tabNames = ["All", "Inquiries", "Matches"]
 
 const Message = [
-    {
-        title: "We Found Philippe Naurilus 5711/1A !",
-        messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
-        image: "Assets/watch1.jpg",
-        isRead: false,
-        Category: "Inquiries",
-        time: "9:00 am, Today"
-    },
-    {
-        title: "We Found Philippe Naurilus 5711/1A !",
-        messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
-        image: "Assets/car2.jpg",
-        isRead: true,
-        Category: "Inquiries",
-        time: "9:00 am, Today"
+  {
+    title: "We Found Philippe Naurilus 5711/1A !",
+    messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
+    image: "Assets/watch1.jpg",
+    isRead: false,
+    Category: "Inquiries",
+    time: "9:00 am, Today"
+  },
+  {
+    title: "We Found Philippe Naurilus 5711/1A !",
+    messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
+    image: "Assets/car2.jpg",
+    isRead: true,
+    Category: "Inquiries",
+    time: "9:00 am, Today"
 
-    },
-    {
-        title: "We Found Philippe Naurilus 5711/1A !",
-        messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
-        image: "Assets/watch2.jpg",
-        isRead: true,
-        Category: "Matches",
-        time: "9:00 am, Today"
-
-
-    },
-    {
-        title: "We Found Philippe Naurilus 5711/1A !",
-        messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
-        image: "Assets/watch3.jpg",
-        isRead: true,
-        Category: "Matches",
-        time: "9:00 am, Today"
+  },
+  {
+    title: "We Found Philippe Naurilus 5711/1A !",
+    messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
+    image: "Assets/watch2.jpg",
+    isRead: true,
+    Category: "Matches",
+    time: "9:00 am, Today"
 
 
-    },
-    {
-        title: "We Found Philippe Naurilus 5711/1A !",
-        messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
-        image: "Assets/car1.jpg",
-        isRead: true,
-        Category: "Matches",
-        time: "9:00 am, Today"
+  },
+  {
+    title: "We Found Philippe Naurilus 5711/1A !",
+    messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
+    image: "Assets/watch3.jpg",
+    isRead: true,
+    Category: "Matches",
+    time: "9:00 am, Today"
 
 
-    },
+  },
+  {
+    title: "We Found Philippe Naurilus 5711/1A !",
+    messageContent: "We found a Philippe Naurilus 5711/1A in your area. Would you like to see it?",
+    image: "Assets/car1.jpg",
+    isRead: true,
+    Category: "Matches",
+    time: "9:00 am, Today"
+
+
+  },
 ]
 
-export default function Page () {
+export default function Page() {
+  const router = useRouter();
 
-      const [chattingLoading, setChattingLoading] = useState<boolean>(false);
-  const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
-  const handleIsStartChatting = () => {
-    setIsStartChatting(true);
-  }
-    const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
-
-
-    const [activeTab, setActiveTab] = useState(tabNames[0]);
-    const handleTabChange = (tab: string) => {
-        setActiveTab(tab);
-    };
-    const handleChats = (chat: { role: string, content: string }) => {
-    setChats(prev => [...prev, chat]);
+  const [activeTab, setActiveTab] = useState(tabNames[0]);
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
   };
-    
 
-    const handleSetPrompt = (prompt: string) => {
-        setChattingLoading(true);
-        handleChats({ role: 'user', content: prompt });
-        handleIsStartChatting();
-    
-        let fullMessage = '';
-        let receivedFirstChunk = false;
-        olleAIChatStream(
-          "thread_FTxK3PYZBFrW9A3dR6EkPXN3",
-          prompt,
-          (chunk) => {
-            if (!receivedFirstChunk) {
-              setChattingLoading(false);
-              receivedFirstChunk = true;
-            }
-            fullMessage += chunk;
-            setChats(prev => {
-              if (prev.length && prev[prev.length - 1].role === 'olleAI') {
-                return [
-                  ...prev.slice(0, -1),
-                  { role: 'olleAI', content: fullMessage }
-                ];
-              } else {
-                return [...prev, { role: 'olleAI', content: fullMessage }];
-              }
-            });
-          },
-          () => {}, // onStatus no-op
-          () => {
-            setChattingLoading(false);
-          }
-        );
-      };
+  const handleSetPrompt = (prompt: string) => {
+    router.push(`/chat?prompt=${prompt}`);
+  };
+  return (
+    <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
+      <div className="px-4 sm:px-0 w-full">
+        <Menu collapse={false} />
+      </div>
+      <p className="font-abril-fatface text-xl text-(--black-5) text-center py-4 sm:py-10">
+        My Inbox
+      </p>
+      <div className="flex flex-col justify-start items-start w-full px-4 sm:px-0">
+        <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" />
+      </div>
+      <div className="flex flex-1 overflow-auto flex-col w-full">
+        <div className="flex flex-1 flex-col overflow-auto w-full gap-2 px-4 sm:px-0">
+          {Message.map((message, index) => {
+            if (message.Category === activeTab)
+              return (
+                <MessageCard time={message.time} image={message.image} title={message.title} messageContent={message.messageContent} isRead={message.isRead} category={message.Category} />
+              )
+            else if (activeTab === "All")
+              return (
+                <MessageCard time={message.time} image={message.image} title={message.title} messageContent={message.messageContent} isRead={message.isRead} category={message.Category} />
+              )
 
-    return (
-        <div className="flex flex-col sm:max-w-6xl w-screen h-dvh pt-2 sm:py-12 sm:px-12 mx-auto">
-            <div className="px-4 sm:px-0 w-full">
-                <Menu collapse={false} />
-            </div>
-            <p className="font-abril-fatface text-xl text-(--black-5) text-center py-4 sm:py-10">
-                My Inbox
-            </p>
-            <div className="flex flex-col justify-start items-start w-full px-4 sm:px-0">
-                <Tab onChange={handleTabChange} tabNames={tabNames} className="my-2 sm:my-4" />
-            </div>
-            <div className="flex flex-1 overflow-auto flex-col w-full">
-                <div className="flex flex-1 flex-col overflow-auto w-full gap-2 px-4 sm:px-0">
-                    {Message.map((message, index) => {
-                        if (message.Category === activeTab)
-                            return (
-                                <MessageCard time={message.time} image={message.image} title={message.title} messageContent={message.messageContent} isRead={message.isRead} category={message.Category} />
-                            )
-                        else if (activeTab === "All")
-                            return (
-                                <MessageCard time={message.time} image={message.image} title={message.title} messageContent={message.messageContent} isRead={message.isRead} category={message.Category} />
-                            )
-
-                        else return null;
-                    })}
+            else return null;
+          })}
 
 
-                </div>
-
-            </div>
-            <div className="w-full px-4 pt-4 pb-6 sm:p-0 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
-                <Snap onChange={handleSetPrompt}/>
-
-            </div>
         </div>
-    )
+
+      </div>
+      <div className="w-full px-4 pt-4 pb-6 sm:p-0 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
+        <Snap onChange={handleSetPrompt} />
+
+      </div>
+    </div>
+  )
 }
