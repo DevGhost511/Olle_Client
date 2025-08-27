@@ -2,7 +2,7 @@ export interface IWishList {
     _id: string;
     name: string;
     category: string;
-    valuation: number;
+    valuation: {min: number, max: number};
     description: string;
     imageURL: string;
     user: string;
