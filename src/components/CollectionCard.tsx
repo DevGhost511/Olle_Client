@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 type Props = {
     name: string,
     image: string,
-    price: number,
+    price: {min: number, max: number},
     className?: string,
     onClick?: () => void,
     onEdit?: () => void,
@@ -95,7 +95,7 @@ export default function CollectionCard({ name, image, price, className, onClick,
                 {name}
             </p>
             <p className="font-Geist text-(--black-5) font-semibold text-md text-left w-full">
-                ${price}
+                ${price.min} - ${price.max}
             </p>
             <div className="flex flex-row justify-center gap-2 w-full">
                 <SecButton text="Ready to Sell" />

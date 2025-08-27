@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { addCollection } from "@/api/private";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import Valuation from "@/components/Valuation";
 const Categories = [
     {
         name: "Car",
@@ -41,7 +42,7 @@ const AddCollection = () => {
             await addCollection({
                 name: collectionInfo?.name,
                 category: collectionInfo?.category,
-                valuation: collectionInfo?.valuation,
+                valuation: {min: collectionInfo?.valuation?.min, max: collectionInfo?.valuation?.max},
                 description: collectionInfo?.description,
                 imageURL: localStorage.getItem("imageUrl") || '',
                 categories: collectionInfo?.categories,
@@ -95,6 +96,7 @@ const AddCollection = () => {
             <div className="flex md:flex-row flex-col gap-6 font-[Geist] pb-8 flex-1 overflow-auto min-h-0">
                 {/* Image */}
                 <div className="flex-1 rounded-lg overflow-auto min-h-0 h-[fit-content]">
+                    {/* <Image src={"/Assets/car.jpg"} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" /> */}
                     <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + '/'+collectionInfo?.imageURL} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" />
                 </div>
                 {/* Form */}
@@ -112,7 +114,11 @@ const AddCollection = () => {
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm text-(--black-5) font-medium">Valuation (USD)</p>
-                        <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, valuation: e.target.value })} value={collectionInfo?.valuation || ''} />
+                        <div className="flex flex-row gap-2 items-center">
+                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, valuation: { min: e.target.value, max: collectionInfo?.valuation?.max } })} value={collectionInfo?.valuation?.min || ''} />
+                            <p className="text-sm text-(--black-5) font-medium">to</p>
+                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, valuation: { min: collectionInfo?.valuation?.min, max: e.target.value } })} value={collectionInfo?.valuation?.max || ''} />
+                        </div>
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm text-(--black-5) font-medium">Description</p>

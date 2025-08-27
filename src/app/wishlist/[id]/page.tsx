@@ -10,8 +10,8 @@ import { getChats, olleAIChatStream } from "@/api/public";
 import ReactMarkdown from "react-markdown";
 import RareRate from "@/components/RareRate";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import Valuation from "@/components/Valuation";
 import { IWishList } from "@/types/wishList";
+import EstimationValue from "@/components/EstimationValue";
 
 const tabNames = ["OVERVIEW", "SPEC"];
 
@@ -353,12 +353,12 @@ const DetailWishList = () => {
                     <div className="flex flex-col gap-6">
                         {activeTab === "OVERVIEW" && (
                             <>
-                                <div className="flex sm:flex-row flex-col justify-center items-center gap-6 sm:gap-12 ">
-                                    <div className="flex sm:flex-col flex-row w-full sm:w-1/3 lg:w-1/4 justify-between items-start gap-6">
-                                        <Valuation value={wishList?.valuation as number} />
+                                <div className="flex flex-col justify-center items-center gap-6 ">
+                                    <div className="flex flex-row w-full justify-between items-start gap-6">
+                                        <EstimationValue min={wishList?.price[0] as number} max={wishList?.price[9] as number} />
                                         <RareRate rarerate={wishList?.rarerate as number} iconsize={"w-7 h-7"} />
                                     </div>
-                                    <div className="flex h-40 sm:h-40 w-full">
+                                    <div className="flex h-40 w-full">
                                         <ResponsiveContainer className="w-full flex items-start sm:items-start justify-start">
                                             <BarChart
                                                 data={chartData}
@@ -417,7 +417,7 @@ const DetailWishList = () => {
                         {activeTab === "SPEC" && (
                             <div className="flex flex-col gap-4">
                                 <div className="flex flex-row w-full justify-between gap-6">
-                                    <Valuation value={wishList?.valuation as number} />
+                                    <EstimationValue min={wishList?.price[0] as number} max={wishList?.price[9] as number} />
                                     <RareRate rarerate={wishList?.rarerate as number} iconsize={"w-7 h-7"} />
                                 </div>
                                 <div className="flex flex-col py-4">

@@ -1,9 +1,6 @@
-import ChattingInput from "@/components/ChattingInput"
 import Menu from "@/components/Menu"
 import PriButton from "@/components/PriButton"
 import SecButton from "@/components/SecButton"
-import Snap from "@/components/Snap"
-
 
 export default function SnapMore() {
     return (
@@ -31,8 +28,6 @@ export default function SnapMore() {
                 </div>
                 </div>
             </div>
-
-
         </div>
     )
 }  

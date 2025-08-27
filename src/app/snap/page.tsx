@@ -224,6 +224,7 @@ export default function Page() {
             name: obj.name,
             category: obj.category,
             price: obj.price,
+            valuation: {min: obj.price[0], max: obj.price[9]},
             rarerate: obj.rarerate,
             description: obj.description,
             categories: obj.categories,
@@ -355,12 +356,12 @@ export default function Page() {
                     <div className="flex flex-col gap-6">
                       {activeTab === "OVERVIEW" && (
                         <>
-                          <div className="flex sm:flex-row flex-col justify-center items-center gap-6 sm:gap-12 ">
-                            <div className="flex sm:flex-col flex-row w-full sm:w-1/3 lg:w-1/4 justify-between items-start gap-6">
-                              <EstimationValue value={collectionPrice[0]} />
+                          <div className="flex flex-col justify-center items-center gap-6 ">
+                            <div className="flex flex-row w-full justify-between items-start gap-6">
+                              <EstimationValue min={collectionPrice[0]} max={collectionPrice[9]} />
                               <RareRate rarerate={collectionRareRate} iconsize={"w-7 h-7"} />
                             </div>
-                            <div className="flex h-40 sm:h-40 w-full">
+                            <div className="flex h-40 w-full">
                               <ResponsiveContainer className="w-full flex items-start sm:items-start justify-start">
                                 <BarChart
                                   data={chartData}
@@ -419,7 +420,7 @@ export default function Page() {
                       {activeTab === "SPEC" && (
                         <div className="flex flex-col gap-4">
                           <div className="flex flex-row w-full justify-between gap-6">
-                            <EstimationValue value={collectionPrice[0]} />
+                            <EstimationValue min={collectionPrice[0]} max={collectionPrice[9]} />
                             <RareRate rarerate={collectionRareRate} iconsize={"w-7 h-7"} />
                           </div>
                           <div className="flex flex-col">

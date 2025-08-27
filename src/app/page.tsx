@@ -78,9 +78,7 @@ export default function Home() {
       </div>
       <div className="w-full px-4 pt-4 pb-6 sm:p-b sm:pb-40 sm:px-20 md:px-30 lg:px-40 sm:shadow-none bg-white sm:bg-inherit  shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.02),0_-4px_6px_-2px_rgba(0,0,0,0.02)]">
         <Snap onChange={handleSetPrompt} />
-
       </div>
     </div>
-
   );
 }
