@@ -108,8 +108,8 @@ const AddCollection = () => {
                     <div className="flex flex-col gap-2">
                         <p className="text-sm text-(--black-5) font-medium">Collection Category</p>
                         <select className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, category: e.target.value })} value={collectionInfo?.category || ''}>
-                            <option value="car">Car</option>
-                            <option value="watch">Watch</option>
+                            <option value="Car">Car</option>
+                            <option value="Watch">Watch</option>
                         </select>
                     </div>
                     <div className="flex flex-col gap-2">
