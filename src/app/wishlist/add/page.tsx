@@ -77,7 +77,7 @@ const AddWishList = () => {
             <div className="flex md:flex-row flex-col gap-6 font-[Geist] pb-8 flex-1 overflow-auto min-h-0">
                 {/* Image */}
                 <div className="flex-1 rounded-lg overflow-auto min-h-0 h-[fit-content]">
-                    <img src={process.env.NEXT_PUBLIC_API_URL + '/' + wishListInfo?.imageURL} alt="Add Collection" className="w-full h-full object-cover" />
+                    <img src={process.env.NEXT_PUBLIC_API_URL + '/' + wishListInfo?.imageUrl} alt="Add Collection" className="w-full h-full object-cover" />
                 </div>
                 {/* Form */}
                 <div className="flex-[2] flex flex-col gap-6 overflow-y-auto min-h-0">
