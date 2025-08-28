@@ -137,7 +137,7 @@ const AddWishList = () => {
 
                 </div>
             </div>
-            <div className="flex flex-row justify-between items-center gap-3 flex-shrink-0">
+            <div className="flex flex-row justify-between items-center gap-3 flex-shrink-0 pb-4">
                 <SecButton text="Cancel" onClick={handleCancel} />
                 <PriButton text="Add WishList" onClick={handleAddWishList} disabled={loading} />
             </div>
