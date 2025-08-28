@@ -1,30 +1,11 @@
 'use client'
 import SecButton from "@/components/SecButton";
 import PriButton from "@/components/PriButton";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { addCollection } from "@/api/private";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import Valuation from "@/components/Valuation";
-const Categories = [
-    {
-        name: "Car",
-        value: "car"
-    },
-    {
-        name: "Watch",
-        value: "watch"
-    },
-    {
-        name: "Watch",
-        value: "watch"
-    },
-    {
-        name: "Watch",
-        value: "watch"
-    },
-]
+
 const AddCollection = () => {
     const router = useRouter();
     const [collectionInfo, setCollectionInfo] = useState<any>(null);
@@ -96,8 +77,7 @@ const AddCollection = () => {
             <div className="flex md:flex-row flex-col gap-6 font-[Geist] pb-8 flex-1 overflow-auto min-h-0">
                 {/* Image */}
                 <div className="flex-1 rounded-lg overflow-auto min-h-0 h-[fit-content]">
-                    {/* <Image src={"/Assets/car.jpg"} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" /> */}
-                    <Image src={process.env.NEXT_PUBLIC_API_URL + '/' + collectionInfo?.imageUrl} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" />
+                    <img src={process.env.NEXT_PUBLIC_API_URL + '/' + collectionInfo?.imageURL} alt="Add Collection" className="w-full h-full object-cover" />
                 </div>
                 {/* Form */}
                 <div className="flex-[2] flex flex-col gap-6 overflow-y-auto min-h-0">
