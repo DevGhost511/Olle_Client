@@ -41,7 +41,7 @@ const AddWishList = () => {
             await addWishList({
                 name: wishListInfo?.name,
                 category: wishListInfo?.category,
-                valuation: {min: wishListInfo?.valuation?.min, max: wishListInfo?.valuation?.max},
+                valuation: { min: wishListInfo?.valuation?.min, max: wishListInfo?.valuation?.max },
                 description: wishListInfo?.description,
                 imageURL: localStorage.getItem("imageUrl") || '',
                 categories: wishListInfo?.categories,
@@ -65,16 +65,16 @@ const AddWishList = () => {
         //get thread info
         let threadIdFromUrl = query.get("threadId");
         let threadIdFromStorage = localStorage.getItem("threadId");
-        
+
         // Use URL threadId first, then fallback to localStorage
         const finalThreadId = threadIdFromUrl || threadIdFromStorage;
-        
+
         if (!finalThreadId) {
             console.error("No threadId found in URL or localStorage");
             router.push("/wishlist");
             return;
         }
-        
+
         const wishListInfo = localStorage.getItem("collection");
         if (wishListInfo) {
             const wishListInfoObj = JSON.parse(wishListInfo);
@@ -95,7 +95,7 @@ const AddWishList = () => {
             <div className="flex md:flex-row flex-col gap-6 font-[Geist] pb-8 flex-1 overflow-auto min-h-0">
                 {/* Image */}
                 <div className="flex-1 rounded-lg overflow-auto min-h-0 h-[fit-content]">
-                    <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + '/'+wishListInfo?.imageURL} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" />
+                    <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + '/images/' + wishListInfo?.imageURL} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" />
                 </div>
                 {/* Form */}
                 <div className="flex-[2] flex flex-col gap-6 overflow-y-auto min-h-0">
@@ -113,9 +113,9 @@ const AddWishList = () => {
                     <div className="flex flex-col gap-2">
                         <p className="text-sm text-(--black-5) font-medium">Valuation (USD)</p>
                         <div className="flex flex-row gap-2 items-center">
-                        <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setWishListInfo({ ...wishListInfo, valuation: { min: e.target.value, max: wishListInfo?.valuation?.max } })} value={wishListInfo?.valuation?.min || ''} />
-                        <p className="text-sm text-(--black-5) font-medium">to</p>
-                        <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setWishListInfo({ ...wishListInfo, valuation: { min: wishListInfo?.valuation?.min, max: e.target.value } })} value={wishListInfo?.valuation?.max || ''} />
+                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setWishListInfo({ ...wishListInfo, valuation: { min: e.target.value, max: wishListInfo?.valuation?.max } })} value={wishListInfo?.valuation?.min || ''} />
+                            <p className="text-sm text-(--black-5) font-medium">to</p>
+                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setWishListInfo({ ...wishListInfo, valuation: { min: wishListInfo?.valuation?.min, max: e.target.value } })} value={wishListInfo?.valuation?.max || ''} />
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">
