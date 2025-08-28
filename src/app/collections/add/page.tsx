@@ -97,7 +97,7 @@ const AddCollection = () => {
                 {/* Image */}
                 <div className="flex-1 rounded-lg overflow-auto min-h-0 h-[fit-content]">
                     {/* <Image src={"/Assets/car.jpg"} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" /> */}
-                    <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + '/images/' + collectionInfo?.imageURL} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" />
+                    <Image src={process.env.NEXT_PUBLIC_API_URL + '/images/' + collectionInfo?.imageURL} alt="Add Collection" width={500} height={500} className="w-full h-full object-cover" />
                 </div>
                 {/* Form */}
                 <div className="flex-[2] flex flex-col gap-6 overflow-y-auto min-h-0">
