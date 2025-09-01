@@ -24,7 +24,7 @@ const ProtectPage = ({children}: {children: React.ReactNode}) => {
     return (
         <>
             {isLoading ? <div className="flex justify-center items-center h-dvh">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+                <div className="w-12 h-12 animate-spin rounded-full border-4 border-(--brand-5) border-t-transparent"></div>
             </div> : children}
         </>
     )

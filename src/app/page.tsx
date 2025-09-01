@@ -2,8 +2,8 @@
 
 import Menu from "@/components/Menu";
 import Snap from "@/components/Snap";
-import { useState, } from "react";
-import { imageIdentify, olleAIChatStream } from "@/api/public"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 
 
@@ -11,16 +11,10 @@ import { imageIdentify, olleAIChatStream } from "@/api/public"
 export default function Home() {
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [chattingLoading, setChattingLoading] = useState<boolean>(false);
-  const [chats, setChats] = useState<{ role: string, content: string }[]>([]);
   const [isStartChatting, setIsStartChatting] = useState<boolean>(false);
-
+  const router = useRouter();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleChats = (chat: { role: string, content: string }) => {
-    setChats(prev => [...prev, chat]);
   };
 
   const handleIsStartChatting = () => {
@@ -28,37 +22,7 @@ export default function Home() {
   }
 
   const handleSetPrompt = (prompt: string) => {
-    setChattingLoading(true);
-    handleChats({ role: 'user', content: prompt });
-    handleIsStartChatting();
-
-    let fullMessage = '';
-    let receivedFirstChunk = false;
-    olleAIChatStream(
-      "thread_FTxK3PYZBFrW9A3dR6EkPXN3",
-      prompt,
-      (chunk) => {
-        if (!receivedFirstChunk) {
-          setChattingLoading(false);
-          receivedFirstChunk = true;
-        }
-        fullMessage += chunk;
-        setChats(prev => {
-          if (prev.length && prev[prev.length - 1].role === 'olleAI') {
-            return [
-              ...prev.slice(0, -1),
-              { role: 'olleAI', content: fullMessage }
-            ];
-          } else {
-            return [...prev, { role: 'olleAI', content: fullMessage }];
-          }
-        });
-      },
-      () => { }, // onStatus no-op
-      () => {
-        setChattingLoading(false);
-      }
-    );
+    router.push(`/chat?prompt=${prompt}`);
   };
 
   return (

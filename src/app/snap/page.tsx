@@ -41,6 +41,14 @@ export default function Page() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const loadingMessages = [
+    "Analyzing your image...",
+    "Identifying the item...",
+    "Checking market data...",
+    "Calculating valuation...",
+    "Almost done..."
+  ];
+
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
@@ -161,6 +169,21 @@ export default function Page() {
     }, 1000)
   }, [])
 
+  // Cycle through loading messages with smooth transitions
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setIsMessageFading(true);
+        setTimeout(() => {
+          setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+          setIsMessageFading(false);
+        }, 300); // Half of the transition duration
+      }, 1500); // Change message every 1.5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [isLoading, loadingMessages.length]);
+
 
 
 
@@ -187,6 +210,9 @@ export default function Page() {
 
 
   const [determined, setDetermined] = useState<-1 | 0 | 1>(-1);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState<number>(0);
+  const [isMessageFading, setIsMessageFading] = useState<boolean>(false);
+
   const handleDetermine = (status: -1 | 0 | 1) => {
     setDetermined(status);
     localStorage.setItem("determined", status.toString());
@@ -202,6 +228,8 @@ export default function Page() {
     setCollectionDescription("");
     setIsStartChatting(false);
     setDetermined(-1);
+    setLoadingMessageIndex(0);
+    setIsMessageFading(false);
   };
 
   const processImageIdentification = (imageUrl: string) => {
@@ -317,9 +345,15 @@ export default function Page() {
         {isLoading ? (<div className="flex flex-col flex-1 w-full">
           <div className="flex flex-col  items-center justify-start gap-4 w-full px-6 sm:px-15 py-6">
             <div className="flex flex-1 flex-col w-full justify-start pt-16 sm:pt-24 items-center gap-8">
-              <p className="text-xl text-(--brand-6) font-medium text-center">
-                Olle AI is thinking...
-              </p>
+              <div className="min-h-[1.75rem] flex items-center justify-center">
+                <p 
+                  className={`text-xl text-(--brand-6) font-medium text-center transition-opacity duration-600 ${
+                    isMessageFading ? 'opacity-0' : 'opacity-100'
+                  }`}
+                >
+                  {loadingMessages[loadingMessageIndex]}
+                </p>
+              </div>
               <div className="w-12 h-12 animate-spin rounded-full border-4 border-(--brand-5) border-t-transparent"></div>          </div>
           </div>
         </div>) : (
