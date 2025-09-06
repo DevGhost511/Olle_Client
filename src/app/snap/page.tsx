@@ -172,10 +172,12 @@ export default function Page() {
   // Cycle through loading messages with smooth transitions
   useEffect(() => {
     if (isLoading) {
+      //just repeat the loading messages once
       const interval = setInterval(() => {
         setIsMessageFading(true);
         setTimeout(() => {
-          setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+
+          setLoadingMessageIndex((prev) => (prev === loadingMessages.length - 1 ? loadingMessages.length - 1 : prev + 1));
           setIsMessageFading(false);
         }, 300); // Half of the transition duration
       }, 1500); // Change message every 1.5 seconds
@@ -238,7 +240,7 @@ export default function Page() {
 
     imageIdentify(null, process.env.NEXT_PUBLIC_API_URL + '/images/' + imageUrl)
     // imageIdentify(null, "https://beige-managerial-gull-792.mypinata.cloud/ipfs/bafybeifw2do4c2gfbrzdspxeepmuu3wolcbikcj2jaflfyt6swxbvnebui")
-      .then(res => {
+      .then((res: any) => {
         setThreadId(res.threadId);
         try {
           const obj = res.reply;
@@ -252,7 +254,7 @@ export default function Page() {
             name: obj.name,
             category: obj.category,
             price: obj.price,
-            valuation: {min: obj.price[0], max: obj.price[9]},
+            valuation: obj.price[0],
             rarerate: obj.rarerate,
             description: obj.description,
             categories: obj.categories,
@@ -266,7 +268,7 @@ export default function Page() {
         }
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch((err: any) => {
         console.error(err);
         resetImageState();
         setIsLoading(false);

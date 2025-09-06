@@ -22,7 +22,7 @@ const customStyles = {
     overlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-};
+};  
 export default function Dashboard() {
     const [collections, setCollections] = useState<ICollection[]>([]);
     const [activeTab, setActiveTab] = useState(tabNames[0]);
@@ -89,7 +89,7 @@ export default function Dashboard() {
             <div className="flex flex-1 flex-col w-full justify-start overflow-auto gap-6 px-4 sm:px-0">
                 {activeTab === "All" && (<div className="flex flex-wrap w-full gap-6 sm:gap-4">
                     {collections.map((collection) => (
-                        <CollectionCard onDelete={() => { setIsModalOpen(true); setCollectionId(collection._id) }} key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
+                        <CollectionCard onDelete={() => {setIsModalOpen(true); setCollectionId(collection._id)}} key={collection._id} name={collection.name} price={collection.valuation} image={process.env.NEXT_PUBLIC_API_URL + '/' + collection.imageURL} className="w-full sm:w-[45%] md:w-[32%]" onClick={() => router.push(`/collections/${collection._id}`)} />
                     ))}
                 </div>)}
 
