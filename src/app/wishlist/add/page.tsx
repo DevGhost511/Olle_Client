@@ -23,7 +23,7 @@ const AddWishList = () => {
             await addWishList({
                 name: wishListInfo?.name,
                 category: wishListInfo?.category,
-                valuation: { min: wishListInfo?.valuation?.min, max: wishListInfo?.valuation?.max },
+                valuation: wishListInfo?.valuation,
                 description: wishListInfo?.description,
                 imageURL: localStorage.getItem("imageUrl") || '',
                 categories: wishListInfo?.categories,
@@ -95,9 +95,7 @@ const AddWishList = () => {
                     <div className="flex flex-col gap-2">
                         <p className="text-sm text-(--black-5) font-medium">Valuation (USD)</p>
                         <div className="flex flex-row gap-2 items-center">
-                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setWishListInfo({ ...wishListInfo, valuation: { min: e.target.value, max: wishListInfo?.valuation?.max } })} value={wishListInfo?.valuation?.min || ''} />
-                            <p className="text-sm text-(--black-5) font-medium">to</p>
-                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setWishListInfo({ ...wishListInfo, valuation: { min: wishListInfo?.valuation?.min, max: e.target.value } })} value={wishListInfo?.valuation?.max || ''} />
+                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setWishListInfo({ ...wishListInfo, valuation: e.target.value })} value={wishListInfo?.valuation || ''} />
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">

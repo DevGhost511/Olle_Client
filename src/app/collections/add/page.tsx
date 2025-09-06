@@ -23,7 +23,7 @@ const AddCollection = () => {
             await addCollection({
                 name: collectionInfo?.name,
                 category: collectionInfo?.category,
-                valuation: { min: collectionInfo?.valuation?.min, max: collectionInfo?.valuation?.max },
+                valuation: collectionInfo?.valuation,
                 description: collectionInfo?.description,
                 imageURL: localStorage.getItem("imageUrl") || '',
                 categories: collectionInfo?.categories,
@@ -95,9 +95,7 @@ const AddCollection = () => {
                     <div className="flex flex-col gap-2">
                         <p className="text-sm text-(--black-5) font-medium">Valuation (USD)</p>
                         <div className="flex flex-row gap-2 items-center">
-                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, valuation: { min: e.target.value, max: collectionInfo?.valuation?.max } })} value={collectionInfo?.valuation?.min || ''} />
-                            <p className="text-sm text-(--black-5) font-medium">to</p>
-                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, valuation: { min: collectionInfo?.valuation?.min, max: e.target.value } })} value={collectionInfo?.valuation?.max || ''} />
+                            <input type="number" className="w-full p-2 rounded-lg border border-(--black-4)" onChange={(e) => setCollectionInfo({ ...collectionInfo, valuation: e.target.value })} value={collectionInfo?.valuation || ''} />
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">
